@@ -8,6 +8,7 @@ from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
+from Plane import *
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
@@ -34,8 +35,16 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.setupLights()
         self.setupCollisions()
         render.setShaderAuto() #you probably want to use this
+        
+        #input
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.accept("escape", sys.exit)
+        self.accept("arrow_up", self.plane.setKey, ["forward", 1])
+        self.accept("arrow_right", self.plane.setKey, ["right", 1])
+        self.accept("arrow_left", self.plane.setKey, ["left", 1])
+        self.accept("arrow_up-up", self.plane.setKey, ["forward", 0])
+        self.accept("arrow_right-up", self.plane.setKey, ["right", 0])
+        self.accept("arrow_left-up", self.plane.setKey, ["left", 0])
         
         ############################################
         ## Class code - example
@@ -60,10 +69,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
     def loadModels(self):
         """loads models into the world"""
-        self.panda = Actor("models/panda-model", {"walk":"panda-walk4"})
-        self.panda.setScale(.005)
-        self.panda.setH(180)
-        self.panda.reparentTo(render)
+        self.plane = Plane()
+        # self.panda = Actor("models/panda-model", {"walk":"panda-walk4"})
+        # self.panda.setScale(.005)
+        # self.panda.setH(180)
+        # self.panda.reparentTo(render)
         self.env = loader.loadModel("models/environment")
         self.env.reparentTo(render)
         self.env.setScale(.25)
