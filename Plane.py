@@ -6,8 +6,9 @@ from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
    
 class Plane(DirectObject):
-    def __init__(self):
+    def __init__(self,camera):
         #load model
+        self.camera = camera
         self.plane = Actor("models/panda-model", {"walk":"panda-walk4"})
         self.plane.setScale(.005)
         self.plane.setH(180)
@@ -23,7 +24,7 @@ class Plane(DirectObject):
     
     def move(self, task):
         elapsed = task.time - self.prevtime
-        camera.lookAt(self.plane)
+        self.camera.lookAt(self.plane)
         if self.keyMap["left"]:
             self.plane.setH(self.plane.getH() + elapsed * 100)
         if self.keyMap["right"]:
