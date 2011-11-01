@@ -45,6 +45,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("arrow_up-up", self.plane.setKey, ["forward", 0])
         self.accept("arrow_right-up", self.plane.setKey, ["right", 0])
         self.accept("arrow_left-up", self.plane.setKey, ["left", 0])
+        self.accept("w", self.plane2.setKey, ["forward", 1])
+        self.accept("d", self.plane2.setKey, ["right", 1])
+        self.accept("a", self.plane2.setKey, ["left", 1])
+        self.accept("w-up", self.plane2.setKey, ["forward", 0])
+        self.accept("d-up", self.plane2.setKey, ["right", 0])
+        self.accept("a-up", self.plane2.setKey, ["left", 0])
         
         ############################################
         ## Class code - example
@@ -63,17 +69,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         ## "mouse1" is the event when the left mouse button is clicked
         ## append "-up" for the equivalent of a pygame.KEYUP event
         #######################################################
-     
-    def setKey(self, key, value):
-        self.keyMap[key] = value     
+        
         
     def loadModels(self):
         """loads models into the world"""
-        self.plane = Plane()
-        # self.panda = Actor("models/panda-model", {"walk":"panda-walk4"})
-        # self.panda.setScale(.005)
-        # self.panda.setH(180)
-        # self.panda.reparentTo(render)
+        self.plane = Plane(base.camList[0])
+        self.plane2 = Plane(base.camList[1])
         self.env = loader.loadModel("models/environment")
         self.env.reparentTo(render)
         self.env.setScale(.25)
