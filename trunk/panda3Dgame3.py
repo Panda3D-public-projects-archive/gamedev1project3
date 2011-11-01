@@ -6,11 +6,18 @@ from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
 
-class World(object): #subclassing here is necessary to accept events
+class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
         #turn off mouse control, otherwise camera is not repositionable
         base.disableMouse()
-        camera.setPosHpr(0, -15, 7, 0, -15, 0)
+        
+        #set up for split screen
+        #open new window
+        w2 = base.openWindow()
+        #set camera 1
+        base.camList[0].setPosHpr(0,-15,7,0,15,0)
+        #set camera 2
+        base.camList[1].setPosHpr(0,-15,7,0,15,0)
         self.loadModels()
         self.setupLights()
         self.setupCollisions()
