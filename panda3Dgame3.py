@@ -1,4 +1,7 @@
-import direct.directbase.DirectStart #starts Panda
+from pandac.PandaModules import loadPrcFileData
+loadPrcFileData('', 'win-size 800 640')
+loadPrcFileData('', 'win-fixed-size #t')
+from direct.directbase import DirectStart
 from pandac.PandaModules import *    #basic Panda modules
 from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
@@ -12,12 +15,21 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.disableMouse()
         
         #set up for split screen
-        #open new window
+        #first window (default window)
+        
+        wp = WindowProperties()
+        wp.setTitle('player 1')
+        base.win.requestProperties(wp)
+        #second window
         w2 = base.openWindow()
+        wp.setTitle('player 2')
+        w2.requestProperties(wp)
+        
         #set camera 1
-        base.camList[0].setPosHpr(0,-15,7,0,15,0)
+        base.camList[0].setPosHpr(0,-15,7,0,-15,0)
         #set camera 2
-        base.camList[1].setPosHpr(0,-15,7,0,15,0)
+        base.camList[1].setPosHpr(0,-15,7,0,-15,0)
+        
         self.loadModels()
         self.setupLights()
         self.setupCollisions()
@@ -48,6 +60,14 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
     def loadModels(self):
         """loads models into the world"""
+        self.panda = Actor("models/panda-model", {"walk":"panda-walk4"})
+        self.panda.setScale(.005)
+        self.panda.setH(180)
+        self.panda.reparentTo(render)
+        self.env = loader.loadModel("models/environment")
+        self.env.reparentTo(render)
+        self.env.setScale(.25)
+        self.env.setPos(-8, 42, 0)        
         #load models here - see panda code for examples
         
     def	setupLights(self):
