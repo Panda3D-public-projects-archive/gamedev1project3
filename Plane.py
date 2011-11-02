@@ -16,8 +16,9 @@ class Plane(DirectObject):
         taskMgr.add(self.move, "moveTask")
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.prevtime = 0
-        self.isMoving = False
-        
+        self.isMoving = False   
+
+        self.setupLights()
         
     def setKey(self,key,value):
         self.keyMap[key] = value
@@ -49,3 +50,16 @@ class Plane(DirectObject):
         self.prevtime = task.time
         return Task.cont
         
+    def setupLights(self):
+    
+        spotlight = Spotlight('spotlight') 
+        spotlight.setColor((.5,.5,.5,1)) 
+        spotlight.setLens(PerspectiveLens()) 
+        spotlight.getLens().setFov(12,12)
+        spotlight.setAttenuation(Vec3(1.0,0.0,0.0)) 
+        spotlight.setExponent(60) 
+
+        spotlightNP = self.plane.attachNewNode(spotlight)	
+        spotlightNP.setHpr(180,0,0) 
+
+        render.setLight(spotlightNP)
