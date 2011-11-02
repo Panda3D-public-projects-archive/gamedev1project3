@@ -55,7 +55,7 @@ class Plane(DirectObject):
         spotlight = Spotlight('spotlight') 
         spotlight.setColor((.5,.5,.5,1)) 
         spotlight.setLens(PerspectiveLens()) 
-        spotlight.getLens().setFov(12,12)
+        spotlight.getLens().setFov(18,18)
         spotlight.setAttenuation(Vec3(1.0,0.0,0.0)) 
         spotlight.setExponent(60) 
 
