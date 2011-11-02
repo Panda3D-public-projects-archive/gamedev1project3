@@ -1,4 +1,5 @@
 from pandac.PandaModules import loadPrcFileData
+from pandac.PandaModules import OdeWorld, OdeBody, OdeMass, Quat
 loadPrcFileData('', 'win-size 800 640')
 loadPrcFileData('', 'win-fixed-size #t')
 from direct.directbase import DirectStart
@@ -10,10 +11,21 @@ from direct.task import Task         #for update fuctions
 import sys, math, random
 from Plane import *
 
+from panda3d.core import Vec3
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletBoxShape
+
+
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
         #turn off mouse control, otherwise camera is not repositionable
         base.disableMouse()
+        
+        #physics world
+        self.physWorld = BulletWorld()
+        self.physWorld.setGravity(Vec3(0,0,-9.81))
         
         #set up for split screen
         #first window (default window)
@@ -33,18 +45,17 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         self.loadModels()
         self.setupLights()
-        self.setupCollisions()
         render.setShaderAuto() #you probably want to use this
         
         #input
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.accept("escape", sys.exit)
-        self.accept("arrow_up", self.plane.setKey, ["forward", 1])
-        self.accept("arrow_right", self.plane.setKey, ["right", 1])
-        self.accept("arrow_left", self.plane.setKey, ["left", 1])
-        self.accept("arrow_up-up", self.plane.setKey, ["forward", 0])
-        self.accept("arrow_right-up", self.plane.setKey, ["right", 0])
-        self.accept("arrow_left-up", self.plane.setKey, ["left", 0])
+        self.accept("arrow_up", self.plane1.setKey, ["forward", 1])
+        self.accept("arrow_right", self.plane1.setKey, ["right", 1])
+        self.accept("arrow_left", self.plane1.setKey, ["left", 1])
+        self.accept("arrow_up-up", self.plane1.setKey, ["forward", 0])
+        self.accept("arrow_right-up", self.plane1.setKey, ["right", 0])
+        self.accept("arrow_left-up", self.plane1.setKey, ["left", 0])
         self.accept("w", self.plane2.setKey, ["forward", 1])
         self.accept("d", self.plane2.setKey, ["right", 1])
         self.accept("a", self.plane2.setKey, ["left", 1])
@@ -72,14 +83,38 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         
     def loadModels(self):
-        """loads models into the world"""
-        self.plane = Plane(base.camList[0])
-        self.plane2 = Plane(base.camList[1])
+        """loads models into the world and set's their collision bodies"""
+        #basic collision setup
+        base.cTrav = CollisionTraverser()
+        self.cHandler = CollisionHandlerEvent()
+        
+        #environment
         self.env = loader.loadModel("models/environment")
         self.env.reparentTo(render)
         self.env.setScale(.25)
-        self.env.setPos(-8, 42, 0)        
-        #load models here - see panda code for examples
+        self.env.setPos(-8, 42, 0)   
+        
+        #player 1 plane
+        self.plane1 = Plane(base.camList[0])
+        np = render.attachNewNode(self.plane1.node)
+        np.setPos(0,0,2)
+        self.physWorld.attachRigidBody(self.plane1.node)
+        self.plane1.plane.reparentTo(np)
+        
+        #player 2 plane
+        self.plane2 = Plane(base.camList[1])
+        np = render.attachNewNode(self.plane2.node)
+        np.setPos(1,0,2)
+        self.physWorld.attachRigidBody(self.plane2.node)
+        self.plane2.plane.reparentTo(np)
+        
+        # plane2_body=OdeBody(self.physWorld)
+        # plane2_body.setPosition(self.plane2.plane.getPos(render))
+        # plane2_body.setQuaternion(self.plane2.plane.getQuat(render))
+        # plane2_mass = OdeMass()
+        # plane2_mass.setBox(11340,1,1,1)
+        # plane2_body.setMass(plane2_mass)
+        
         
     def setupLights(self):
         #ambient light
@@ -107,33 +142,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
         ######################################################
         
         
-    def setupCollisions(self):
-        #instantiates a collision traverser and sets it to the default
-        base.cTrav = CollisionTraverser()
-        self.cHandler = CollisionHandlerEvent()
-        #set pattern for event sent on collision
-        # "%in" is substituted with the name of the into object
-        self.cHandler.setInPattern("collide-%in")
-        
-        ##################################################################
-        ## Class code - example
-        # cSphere = CollisionSphere((0,0,0), 500) #because the panda is scaled way down
-        # cNode = CollisionNode("panda")
-        # cNode.addSolid(cSphere)
-        # cNode.setIntoCollideMask(BitMask32.allOff()) #panda is *only* a from object
-        # cNodePath = self.panda.attachNewNode(cNode)
-        ##cNodePath.show()
-        ##registers a from object with the traverser with a corresponding handler
-        # base.cTrav.addCollider(cNodePath, self.cHandler)
-        
-        # for target in self.targets:
-            # cSphere = CollisionSphere((0,0,0), 2)
-            # cNode = CollisionNode("smiley")
-            # cNode.addSolid(cSphere)
-            # cNodePath = target.attachNewNode(cNode)
-            ##cNodePath.show()
-        
-
 w = World()
 run()
 

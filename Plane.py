@@ -4,21 +4,41 @@ from direct.task import Task
 import sys, math, random
 from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
+
+from panda3d.core import Vec3
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletBoxShape
    
 class Plane(DirectObject):
     def __init__(self,camera):
         #load model
         self.camera = camera
-        self.plane = Actor("models/panda-model", {"walk":"panda-walk4"})
-        self.plane.setScale(.005)
-        self.plane.setH(180)
-        self.plane.reparentTo(render)
+        self.plane = loader.loadModel("models/mig-3")
+        self.plane.setScale(.05)
+        #self.plane.setH(180)
+        shape = BulletBoxShape(Vec3(.5,.5,.5))
+        self.node = BulletRigidBodyNode('PlaneBox')
+        self.node.setMass(1.0)
+        self.node.addShape(shape)
         taskMgr.add(self.move, "moveTask")
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.prevtime = 0
         self.isMoving = False   
 
         self.setupLights()
+
+        #set up collision - old
+        # self.cSphere = CollisionSphere((0,0,0),50)
+        # self.cNode = CollisionNode("plane")
+        # self.cNode.addSolid(self.cSphere)
+        # self.cNodePath = self.plane.attachNewNode(self.cNode)
+        # self.cNodePath.show()
+        
+        
+       
+        
         
     def setKey(self,key,value):
         self.keyMap[key] = value
@@ -37,15 +57,15 @@ class Plane(DirectObject):
             dy = dist * -math.cos(angle)
             self.plane.setPos(self.plane.getX() + dx, self.plane.getY() + dy, 0)
             
-        if self.keyMap["left"] or self.keyMap["right"] or self.keyMap["forward"]:
-            if self.isMoving == False:
-                self.isMoving = True
-                self.plane.loop("walk")
-        else:
-            if self.isMoving:
-                self.isMoving = False
-                self.plane.stop()
-                self.plane.pose("walk", 4)
+        # if self.keyMap["left"] or self.keyMap["right"] or self.keyMap["forward"]:
+            # if self.isMoving == False:
+                # self.isMoving = True
+                # self.plane.loop("walk")
+        # else:
+            # if self.isMoving:
+                # self.isMoving = False
+                # self.plane.stop()
+                # self.plane.pose("walk", 4)
         
         self.prevtime = task.time
         return Task.cont
