@@ -81,7 +81,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.env.setPos(-8, 42, 0)        
         #load models here - see panda code for examples
         
-    def	setupLights(self):
+    def setupLights(self):
         #ambient light
         self.ambientLight = AmbientLight("ambientLight")
         #four values, RGBA (alpha is largely irrelevent), value range is 0:1
