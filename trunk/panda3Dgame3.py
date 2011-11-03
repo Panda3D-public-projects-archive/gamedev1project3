@@ -53,8 +53,23 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("d-up", self.plane2.setKey, ["right", 0])
         self.accept("a-up", self.plane2.setKey, ["left", 0])
         
-        self.accept("collide-plane1", self.collisionTest)
-        self.accept("collide-plane2", self.collisionTest)
+        #collision stuff
+        self.accept("collide-tail_plane1", self.collisionTest)
+        self.accept("collide-bodyfront_plane1", self.collisionTest)
+        self.accept("collide-bodymid_plane1", self.collisionTest)
+        self.accept("collide-bodyrear_plane1", self.collisionTest)
+        self.accept("collide-lwouter_plane1", self.collisionTest)
+        self.accept("collide-rwouter_plane1", self.collisionTest)
+        self.accept("collide-lwinner_plane1", self.collisionTest)
+        self.accept("collide-rwinner_plane1", self.collisionTest)
+        self.accept("collide-tail_plane2", self.collisionTest)
+        self.accept("collide-bodyfront_plane2", self.collisionTest)
+        self.accept("collide-bodymid_plane2", self.collisionTest)
+        self.accept("collide-bodyrear_plane2", self.collisionTest)
+        self.accept("collide-lwouter_plane2", self.collisionTest)
+        self.accept("collide-rwouter_plane2", self.collisionTest)
+        self.accept("collide-lwinner_plane2", self.collisionTest)
+        self.accept("collide-rwinner_plane2", self.collisionTest)
         
         
         
@@ -73,15 +88,57 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #player 1 plane
         self.plane1 = Plane(base.camList[0],"plane1")
-        self.plane1.plane.setPos(5,5,5)
-        base.cTrav.addCollider(self.plane1.cNodePath, self.cHandler)
-        self.cHandler.addCollider(self.plane1.cNodePath, self.plane1.plane)
+        self.plane1.plane.setPos(5,0,0)
+        #add pieces for collisions
+        #tail
+        base.cTrav.addCollider(self.plane1.tail_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.tail_cNodePath, self.plane1.plane)
+        #outer wing left
+        base.cTrav.addCollider(self.plane1.lwouter_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.lwouter_cNodePath, self.plane1.plane)
+        #outer wing right
+        base.cTrav.addCollider(self.plane1.rwouter_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.rwouter_cNodePath, self.plane1.plane)
+        #inner wing left
+        base.cTrav.addCollider(self.plane1.lwinner_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.lwinner_cNodePath, self.plane1.plane)
+        #inner wing right
+        base.cTrav.addCollider(self.plane1.rwinner_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.rwinner_cNodePath, self.plane1.plane)
+        #body three pieces
+        base.cTrav.addCollider(self.plane1.bodyfront_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.bodyfront_cNodePath, self.plane1.plane)
+        base.cTrav.addCollider(self.plane1.bodymid_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.bodymid_cNodePath, self.plane1.plane)
+        base.cTrav.addCollider(self.plane1.bodyrear_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane1.bodyrear_cNodePath, self.plane1.plane)
         
         #player 2 plane
         self.plane2 = Plane(base.camList[1], "plane2")
-        self.plane2.plane.setPos(10,10,10)
-        base.cTrav.addCollider(self.plane2.cNodePath, self.cHandler)
-        self.cHandler.addCollider(self.plane2.cNodePath, self.plane2.plane)
+        self.plane2.plane.setPos(20,0,0)
+        #add pieces for collisions
+        #tail
+        base.cTrav.addCollider(self.plane2.tail_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.tail_cNodePath, self.plane2.plane)
+         #outer wing left
+        base.cTrav.addCollider(self.plane2.lwouter_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.lwouter_cNodePath, self.plane2.plane)
+        #outer wing right
+        base.cTrav.addCollider(self.plane2.rwouter_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.rwouter_cNodePath, self.plane2.plane)
+        #inner wing left
+        base.cTrav.addCollider(self.plane2.lwinner_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.lwinner_cNodePath, self.plane2.plane)
+        #inner wing right
+        base.cTrav.addCollider(self.plane2.rwinner_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.rwinner_cNodePath, self.plane2.plane)
+        #body three pieces
+        base.cTrav.addCollider(self.plane2.bodyfront_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.bodyfront_cNodePath, self.plane2.plane)
+        base.cTrav.addCollider(self.plane2.bodymid_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.bodymid_cNodePath, self.plane2.plane)
+        base.cTrav.addCollider(self.plane2.bodyrear_cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.plane2.bodyrear_cNodePath, self.plane2.plane)
         
         
         
@@ -111,7 +168,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
         ######################################################
     
     def collisionTest(self, cEntry):
-        print(cEntry.getIntoNodePath().getParent())
+        if cEntry.getIntoNodePath().getParent() != cEntry.getFromNodePath().getParent():
+            print(str(cEntry.getIntoNodePath()) + " " + str(cEntry.getFromNodePath()))
         
         
 w = World()
