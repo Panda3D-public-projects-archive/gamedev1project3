@@ -24,11 +24,52 @@ class Plane(DirectObject):
         self.setupLights()
 
         #set up collision
-        self.cNode = CollisionNode(name)
+        #tail
+        self.tail_cNode = CollisionNode("tail_"+name)
         self.tail_cSphere = CollisionSphere((0,28,26),13)
-        self.cNode.addSolid(self.tail_cSphere)
-        self.cNodePath = self.plane.attachNewNode(self.cNode)
-        self.cNodePath.show()
+        self.tail_cNode.addSolid(self.tail_cSphere)
+        self.tail_cNodePath = self.plane.attachNewNode(self.tail_cNode)
+        self.tail_cNodePath.show()
+        #outer wing left
+        self.lwouter_cNode = CollisionNode("lwouter_"+name)
+        self.lwouter_cSphere = CollisionSphere((-37,-10,22),8)
+        self.lwouter_cNode.addSolid(self.lwouter_cSphere)
+        self.lwouter_cNodePath = self.plane.attachNewNode(self.lwouter_cNode)
+        self.lwouter_cNodePath.show()
+        #outer wing right
+        self.rwouter_cNode = CollisionNode("rwouter_"+name)
+        self.rwouter_cSphere = CollisionSphere((37,-10,22),8)
+        self.rwouter_cNode.addSolid(self.rwouter_cSphere)
+        self.rwouter_cNodePath = self.plane.attachNewNode(self.rwouter_cNode)
+        self.rwouter_cNodePath.show()
+        #inner wing left
+        self.lwinner_cNode = CollisionNode("lwinner_"+name)
+        self.lwinner_cSphere = CollisionSphere((-20,-10,20),11)
+        self.lwinner_cNode.addSolid(self.lwinner_cSphere)
+        self.lwinner_cNodePath = self.plane.attachNewNode(self.lwinner_cNode)
+        self.lwinner_cNodePath.show()
+        #inner wing right
+        self.rwinner_cNode = CollisionNode("rwinner_"+name)
+        self.rwinner_cSphere = CollisionSphere((20,-10,20),11)
+        self.rwinner_cNode.addSolid(self.rwinner_cSphere)
+        self.rwinner_cNodePath = self.plane.attachNewNode(self.rwinner_cNode)
+        self.rwinner_cNodePath.show()
+        #body three pieces
+        self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
+        self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
+        self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
+        self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
+        self.bodyfront_cNodePath.show()
+        self.bodymid_cNode = CollisionNode("bodymid_"+name)
+        self.bodymid_cSphere = CollisionSphere((0,-12,22),12)
+        self.bodymid_cNode.addSolid(self.bodymid_cSphere)
+        self.bodymid_cNodePath = self.plane.attachNewNode(self.bodymid_cNode)
+        self.bodymid_cNodePath.show()
+        self.bodyrear_cNode = CollisionNode("bodyrear_"+name)
+        self.bodyrear_cSphere = CollisionSphere((0,7,24),10)
+        self.bodyrear_cNode.addSolid(self.bodyrear_cSphere)
+        self.bodyrear_cNodePath = self.plane.attachNewNode(self.bodyrear_cNode)
+        self.bodyrear_cNodePath.show()
         
         
        
