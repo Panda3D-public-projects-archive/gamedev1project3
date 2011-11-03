@@ -5,23 +5,17 @@ import sys, math, random
 from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
 
-from panda3d.core import Vec3
-from panda3d.bullet import BulletWorld
-from panda3d.bullet import BulletPlaneShape
-from panda3d.bullet import BulletRigidBodyNode
-from panda3d.bullet import BulletBoxShape
-   
 class Plane(DirectObject):
-    def __init__(self,camera):
+    def __init__(self,camera,name):
         #load model
+        self.np = None
         self.camera = camera
-        self.plane = loader.loadModel("models/mig-3")
+        self.plane = render.attachNewNode(ActorNode(name))
+        self.model = loader.loadModel("models/mig-3")
+        self.model.reparentTo(self.plane)
         self.plane.setScale(.05)
-        #self.plane.setH(180)
-        shape = BulletBoxShape(Vec3(.5,.5,.5))
-        self.node = BulletRigidBodyNode('PlaneBox')
-        self.node.setMass(1.0)
-        self.node.addShape(shape)
+        self.plane.setH(180)
+        #self.plane.reparentTo(render)
         taskMgr.add(self.move, "moveTask")
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.prevtime = 0
@@ -29,12 +23,12 @@ class Plane(DirectObject):
 
         self.setupLights()
 
-        #set up collision - old
-        # self.cSphere = CollisionSphere((0,0,0),50)
-        # self.cNode = CollisionNode("plane")
-        # self.cNode.addSolid(self.cSphere)
-        # self.cNodePath = self.plane.attachNewNode(self.cNode)
-        # self.cNodePath.show()
+        #set up collision
+        self.cNode = CollisionNode(name)
+        self.tail_cSphere = CollisionSphere((0,28,26),13)
+        self.cNode.addSolid(self.tail_cSphere)
+        self.cNodePath = self.plane.attachNewNode(self.cNode)
+        self.cNodePath.show()
         
         
        
@@ -83,3 +77,5 @@ class Plane(DirectObject):
         spotlightNP.setHpr(180,0,0) 
 
         render.setLight(spotlightNP)
+        
+        
