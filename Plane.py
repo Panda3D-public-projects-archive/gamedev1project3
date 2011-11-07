@@ -19,10 +19,29 @@ class Plane(DirectObject):
         taskMgr.add(self.move, "moveTask")
         self.keyMap = {"left":0, "right":0, "forward":0}
         self.prevtime = 0
-        self.isMoving = False   
+        self.isMoving = False  
 
+        #hp levels for each piece of the plane
+        self.body_hp= 50 #make it hard to blow up the body without making the player crash to the ground
+        self.lwo_hp=5
+        self.rwo_hp=5
+        self.lwi_hp=10
+        self.rwi_hp=10
+        self.tail_hp=12
+
+        #booleans for inventory of remaining plane parts
+        #don't need to include body because obviously if body is lost then you are dead
+        self.has_tail=True
+        self.has_lwo=True
+        self.has_lwi=True
+        self.has_rwo=True
+        self.has_rwi=True
+            
+        self.setupCollision(name)
         self.setupLights()
-
+       
+        
+    def setupCollision(self,name):
         #set up collision
         #tail
         self.tail_cNode = CollisionNode("tail_"+name)
@@ -70,11 +89,7 @@ class Plane(DirectObject):
         self.bodyrear_cNode.addSolid(self.bodyrear_cSphere)
         self.bodyrear_cNodePath = self.plane.attachNewNode(self.bodyrear_cNode)
         self.bodyrear_cNodePath.show()
-        
-        
-       
-        
-        
+    
     def setKey(self,key,value):
         self.keyMap[key] = value
     
@@ -91,16 +106,6 @@ class Plane(DirectObject):
             dx = dist * math.sin(angle)
             dy = dist * -math.cos(angle)
             self.plane.setPos(self.plane.getX() + dx, self.plane.getY() + dy, 0)
-            
-        # if self.keyMap["left"] or self.keyMap["right"] or self.keyMap["forward"]:
-            # if self.isMoving == False:
-                # self.isMoving = True
-                # self.plane.loop("walk")
-        # else:
-            # if self.isMoving:
-                # self.isMoving = False
-                # self.plane.stop()
-                # self.plane.pose("walk", 4)
         
         self.prevtime = task.time
         return Task.cont
