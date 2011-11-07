@@ -158,6 +158,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
         render.setLight(self.ambientLightNP)
         #call clearLight() to turn it off
         
+        render.setShaderAuto()
+        
         
         ##################################################
         ## Class code - example

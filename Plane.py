@@ -136,15 +136,26 @@ class Plane(DirectObject):
         
     def setupLights(self):
     
+    
+    
+        #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
+        #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
+        #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
+        #self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
+        
+        lens = PerspectiveLens()
         spotlight = Spotlight('spotlight') 
         spotlight.setColor((.5,.5,.5,1)) 
         spotlight.setLens(PerspectiveLens()) 
-        spotlight.getLens().setFov(18,18)
-        spotlight.setAttenuation(Vec3(1.0,0.0,0.0)) 
-        spotlight.setExponent(60) 
+        spotlight.getLens().setFov(15,15) 
+        spotlight.getLens().setNearFar(20,20) 
+        spotlight.setExponent(45)
 
-        spotlightNP = self.plane.attachNewNode(spotlight)	
+        spotlightNP = self.plane.attachNewNode(spotlight)
+        spotlightNP.setPos(VBase3(0,0,20))
         spotlightNP.setHpr(180,0,0) 
+        spotlightNP.setShaderAuto()
+        spotlightNP.setDepthOffset(1)
 
         render.setLight(spotlightNP)
         
