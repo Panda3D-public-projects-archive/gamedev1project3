@@ -226,6 +226,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.has_lwo= False 
                     
+                    
             #plane2 left outer wing
             elif str(cEntry.getIntoNodePath()) =="render/plane2/lwouter_plane2":
                 self.plane2.lwo_hp-=1
@@ -243,6 +244,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     print("plane1 lost rwo!")
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.has_rwo = False
+                    
                     
             #plane2 right outer wing
             elif str(cEntry.getIntoNodePath()) == "render/plane2/rwouter_plane2":
