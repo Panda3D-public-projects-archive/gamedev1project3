@@ -73,6 +73,10 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("collide-lwinner_plane2", self.collisionTest)
         self.accept("collide-rwinner_plane2", self.collisionTest)
         
+        #projectile/guns stuff
+        self.accept("q",self.plane2.shoot)
+        self.accept("/", self.plane1.shoot)
+        
         
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)
