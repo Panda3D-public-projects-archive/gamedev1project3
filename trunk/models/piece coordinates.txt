@@ -1,0 +1,11 @@
+character name: MiG-3_parts
+
+
+body		0, 0, 0
+right wing	-10.7, -6.21, 3.45
+right tip	.64, -4.09, .7
+left wing	8.35, -6.34, 3.45
+left tip	.69, 3.76, .68
+tail		0, 3.59, 31.6
+
+
