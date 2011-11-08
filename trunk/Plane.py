@@ -13,14 +13,31 @@ class Plane(DirectObject):
         self.np = None
         self.camera = camera
         self.plane = render.attachNewNode(ActorNode(name))
-        self.model = loader.loadModel("models/mig-3")
+        #self.model = loader.loadModel("models/mig-3")
+        self.model_body = loader.loadModel("models/body")
+        self.model_body.reparentTo(self.plane)
+        self.model_tail = loader.loadModel("models/tail")
+        self.model_tail.reparentTo(self.plane)
+        self.model_tail.setPos(0,0,0)
+        self.model_rwo=loader.loadModel("models/right_tip")
+        self.model_rwo.reparentTo(self.plane)
+        self.model_rwo.setPos(0,0,0)
+        self.model_lwo=loader.loadModel("models/left_tip")
+        self.model_lwo.reparentTo(self.plane)
+        self.model_lwo.setPos(0,0,0)
+        self.model_rwi=loader.loadModel("models/right_wing")
+        self.model_rwi.reparentTo(self.plane)
+        self.model_rwi.setPos(0,0,0)
+        self.model_lwi=loader.loadModel("models/left_wing")
+        self.model_lwi.reparentTo(self.plane)
+        self.model_lwi.setPos(0,0,0)
         self.model2 = loader.loadModel("models/panda-model")
         self.model2.setScale(.01)
         self.model2.setPos(0,-30,25)
         self.model2.setP(12)
         self.model2.setR(-3)
         self.model2.reparentTo(self.plane)
-        self.model.reparentTo(self.plane)
+        #self.model.reparentTo(self.plane)
         self.plane.setScale(.05)
         self.plane.setH(180)
         #self.plane.reparentTo(render)
@@ -56,47 +73,47 @@ class Plane(DirectObject):
         self.tail_cSphere = CollisionSphere((0,28,26),13)
         self.tail_cNode.addSolid(self.tail_cSphere)
         self.tail_cNodePath = self.plane.attachNewNode(self.tail_cNode)
-        self.tail_cNodePath.show()
-        #outer wing left
-        self.lwouter_cNode = CollisionNode("lwouter_"+self.name)
-        self.lwouter_cSphere = CollisionSphere((-37,-10,22),8)
-        self.lwouter_cNode.addSolid(self.lwouter_cSphere)
-        self.lwouter_cNodePath = self.plane.attachNewNode(self.lwouter_cNode)
-        self.lwouter_cNodePath.show()
+        #self.tail_cNodePath.show()
         #outer wing right
         self.rwouter_cNode = CollisionNode("rwouter_"+self.name)
-        self.rwouter_cSphere = CollisionSphere((37,-10,22),8)
+        self.rwouter_cSphere = CollisionSphere((-37,-10,22),8)
         self.rwouter_cNode.addSolid(self.rwouter_cSphere)
         self.rwouter_cNodePath = self.plane.attachNewNode(self.rwouter_cNode)
-        self.rwouter_cNodePath.show()
-        #inner wing left
-        self.lwinner_cNode = CollisionNode("lwinner_"+self.name)
-        self.lwinner_cSphere = CollisionSphere((-20,-10,20),11)
-        self.lwinner_cNode.addSolid(self.lwinner_cSphere)
-        self.lwinner_cNodePath = self.plane.attachNewNode(self.lwinner_cNode)
-        self.lwinner_cNodePath.show()
+        #self.rwouter_cNodePath.show()
+        #outer wing left
+        self.lwouter_cNode = CollisionNode("lwouter_"+self.name)
+        self.lwouter_cSphere = CollisionSphere((37,-10,22),8)
+        self.lwouter_cNode.addSolid(self.lwouter_cSphere)
+        self.lwouter_cNodePath = self.plane.attachNewNode(self.lwouter_cNode)
+        #self.lwouter_cNodePath.show()
         #inner wing right
         self.rwinner_cNode = CollisionNode("rwinner_"+self.name)
-        self.rwinner_cSphere = CollisionSphere((20,-10,20),11)
+        self.rwinner_cSphere = CollisionSphere((-20,-10,20),11)
         self.rwinner_cNode.addSolid(self.rwinner_cSphere)
         self.rwinner_cNodePath = self.plane.attachNewNode(self.rwinner_cNode)
-        self.rwinner_cNodePath.show()
+        #self.rwinner_cNodePath.show()
+        #inner wing left
+        self.lwinner_cNode = CollisionNode("lwinner_"+self.name)
+        self.lwinner_cSphere = CollisionSphere((20,-10,20),11)
+        self.lwinner_cNode.addSolid(self.lwinner_cSphere)
+        self.lwinner_cNodePath = self.plane.attachNewNode(self.lwinner_cNode)
+        #self.lwinner_cNodePath.show()
         #body three pieces
         self.bodyfront_cNode = CollisionNode("bodyfront_"+self.name)
         self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
         self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
         self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
-        self.bodyfront_cNodePath.show()
+        #self.bodyfront_cNodePath.show()
         self.bodymid_cNode = CollisionNode("bodymid_"+self.name)
         self.bodymid_cSphere = CollisionSphere((0,-12,22),12)
         self.bodymid_cNode.addSolid(self.bodymid_cSphere)
         self.bodymid_cNodePath = self.plane.attachNewNode(self.bodymid_cNode)
-        self.bodymid_cNodePath.show()
+        #self.bodymid_cNodePath.show()
         self.bodyrear_cNode = CollisionNode("bodyrear_"+self.name)
         self.bodyrear_cSphere = CollisionSphere((0,7,24),10)
         self.bodyrear_cNode.addSolid(self.bodyrear_cSphere)
         self.bodyrear_cNodePath = self.plane.attachNewNode(self.bodyrear_cNode)
-        self.bodyrear_cNodePath.show()
+        #self.bodyrear_cNodePath.show()
     
     def setKey(self,key,value):
         self.keyMap[key] = value
@@ -135,50 +152,28 @@ class Plane(DirectObject):
         self.trajectory.start()
         
     def setupLights(self):
+    
+    
+    
+        #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
+        #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
+        #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
+        #self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
         
-        #Right Spotlight
-        spotlight1 = Spotlight('spotlight') 
-        spotlight1.setColor((.5,.5,.5,1)) 
-        spotlight1.setLens(PerspectiveLens()) 
-        spotlight1.getLens().setFov(15,15) 
-        spotlight1.getLens().setNearFar(20,20) 
-        spotlight1.setExponent(45)
-        
-        #Left Spotlight
-        spotlight2 = Spotlight('spotlight') 
-        spotlight2.setColor((.5,.5,.5,1)) 
-        spotlight2.setLens(PerspectiveLens()) 
-        spotlight2.getLens().setFov(15,15) 
-        spotlight2.getLens().setNearFar(20,20) 
-        spotlight2.setExponent(45)
-        
-        #Center Spotlight (Dimmer, can't be shot off)
-        pointlight = PointLight('pointlight') 
-        pointlight.setColor((1,1,1,1))
-        pointlight.setAttenuation(Point3(0,0,1))
-        
-        
-        #Nodepath for right spotlight
-        spotlightNP1 = self.plane.attachNewNode(spotlight1)
-        spotlightNP1.setPos(VBase3(-40,0,20))
-        spotlightNP1.setHpr(180,0,0) 
-        spotlightNP1.setShaderAuto()
-        spotlightNP1.setDepthOffset(1)
-        
-        #Nodepath for left spotlight
-        spotlightNP2 = self.plane.attachNewNode(spotlight2)
-        spotlightNP2.setPos(VBase3(40,0,20))
-        spotlightNP2.setHpr(180,0,0) 
-        spotlightNP2.setShaderAuto()
-        spotlightNP2.setDepthOffset(1)
-        
-        #Nodepath for center spotlight
-        pointlightNP = self.plane.attachNewNode(pointlight)
-        pointlightNP.setPos(VBase3(0,-35,20))
-        pointlightNP.setHpr(180,0,0) 
-        pointlightNP.setShaderAuto()
-        pointlightNP.setDepthOffset(1)
+        lens = PerspectiveLens()
+        spotlight = Spotlight('spotlight') 
+        spotlight.setColor((.5,.5,.5,1)) 
+        spotlight.setLens(PerspectiveLens()) 
+        spotlight.getLens().setFov(15,15) 
+        spotlight.getLens().setNearFar(20,20) 
+        spotlight.setExponent(45)
 
-        render.setLight(spotlightNP1)
-        render.setLight(spotlightNP2)
-        render.setLight(pointlightNP)  
+        spotlightNP = self.plane.attachNewNode(spotlight)
+        spotlightNP.setPos(VBase3(0,0,20))
+        spotlightNP.setHpr(180,0,0) 
+        spotlightNP.setShaderAuto()
+        spotlightNP.setDepthOffset(1)
+
+        render.setLight(spotlightNP)
+        
+        

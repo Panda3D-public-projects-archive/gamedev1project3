@@ -56,22 +56,22 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("a-up", self.plane2.setKey, ["left", 0])
         
         #collision stuff
-        self.accept("collide-tail_plane1", self.collisionTest)
-        self.accept("collide-bodyfront_plane1", self.collisionTest)
-        self.accept("collide-bodymid_plane1", self.collisionTest)
-        self.accept("collide-bodyrear_plane1", self.collisionTest)
-        self.accept("collide-lwouter_plane1", self.collisionTest)
-        self.accept("collide-rwouter_plane1", self.collisionTest)
-        self.accept("collide-lwinner_plane1", self.collisionTest)
-        self.accept("collide-rwinner_plane1", self.collisionTest)
-        self.accept("collide-tail_plane2", self.collisionTest)
-        self.accept("collide-bodyfront_plane2", self.collisionTest)
-        self.accept("collide-bodymid_plane2", self.collisionTest)
-        self.accept("collide-bodyrear_plane2", self.collisionTest)
-        self.accept("collide-lwouter_plane2", self.collisionTest)
-        self.accept("collide-rwouter_plane2", self.collisionTest)
-        self.accept("collide-lwinner_plane2", self.collisionTest)
-        self.accept("collide-rwinner_plane2", self.collisionTest)
+        self.accept("collide-tail_plane1", self.planeCollisions)
+        self.accept("collide-bodyfront_plane1", self.planeCollisions)
+        self.accept("collide-bodymid_plane1", self.planeCollisions)
+        self.accept("collide-bodyrear_plane1", self.planeCollisions)
+        self.accept("collide-lwouter_plane1", self.planeCollisions)
+        self.accept("collide-rwouter_plane1", self.planeCollisions)
+        self.accept("collide-lwinner_plane1", self.planeCollisions)
+        self.accept("collide-rwinner_plane1", self.planeCollisions)
+        self.accept("collide-tail_plane2", self.planeCollisions)
+        self.accept("collide-bodyfront_plane2", self.planeCollisions)
+        self.accept("collide-bodymid_plane2", self.planeCollisions)
+        self.accept("collide-bodyrear_plane2", self.planeCollisions)
+        self.accept("collide-lwouter_plane2", self.planeCollisions)
+        self.accept("collide-rwouter_plane2", self.planeCollisions)
+        self.accept("collide-lwinner_plane2", self.planeCollisions)
+        self.accept("collide-rwinner_plane2", self.planeCollisions)
         
         #projectile/guns stuff
         self.accept("q",self.plane2.shoot)
@@ -121,7 +121,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #player 2 plane
         self.plane2 = Plane(base.camList[1], "plane2")
-        self.plane2.plane.setPos(23,6,0)
+        self.plane2.plane.setPos(20,0,0)
         #add pieces for collisions
         #tail
         base.cTrav.addCollider(self.plane2.tail_cNodePath, self.cHandler)
@@ -175,7 +175,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         # render.setLight(self.fillLightNP)
         ######################################################
     
-    def collisionTest(self, cEntry):
+    def planeCollisions(self, cEntry):
         if cEntry.getIntoNodePath().getParent() != cEntry.getFromNodePath().getParent():
             #print(str(cEntry.getIntoNodePath()) + " " + str(cEntry.getFromNodePath()))
             
@@ -206,6 +206,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane1.tail_hp<=0):
                     print("plane1 lost tail!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane1.model_tail.remove() #remove model
                     self.plane1.has_tail=False
                     
             #plane2 tail
@@ -215,6 +216,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane2.tail_hp<=0):
                     print("plane2 lost tail!")
                     cEntry.getIntoNodePath().remove() # remove cnode
+                    self.plane2.model_tail.remove() #remove model
                     self.plane2.has_tail = False
                     
             #plane1 left outer wing
@@ -224,8 +226,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane1.lwo_hp<=0):
                     print("plane1 lost lwo!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane1.model_lwo.remove() #remove model
                     self.plane1.has_lwo= False 
-                    
                     
             #plane2 left outer wing
             elif str(cEntry.getIntoNodePath()) =="render/plane2/lwouter_plane2":
@@ -234,6 +236,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane2.lwo_hp<=0):
                     print("plane2 lost lwo!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane2.model_lwo.remove() #remove model
                     self.plane2.has_lwo = False
                       
             #plane1 right outer wing
@@ -243,8 +246,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane1.rwo_hp<=0):
                     print("plane1 lost rwo!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane1.model_rwo.remove() #remove model
                     self.plane1.has_rwo = False
-                    
                     
             #plane2 right outer wing
             elif str(cEntry.getIntoNodePath()) == "render/plane2/rwouter_plane2":
@@ -253,6 +256,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane2.rwo_hp<=0):
                     print("plane2 lost rwo!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane2.model_rwo.remove() #remove model
                     self.plane2.has_rwo=False
                     
             #plane1 left inner wing
@@ -262,10 +266,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane1.lwi_hp<=0):
                     print("plane1 lost lwi!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane1.model_lwi.remove() #remove model
                     self.plane1.has_lwi=False
                     #remove lwo too if it still exists
                     if(self.plane1.has_lwo):
-                        self.plane1.lwouter_cNodePath.remove() 
+                        self.plane1.lwouter_cNodePath.remove()
+                        self.plane1.model_lwo.remove()
                         self.plane1.has_lwo=False
                         print("and lwo!")
                     
@@ -276,10 +282,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane2.lwi_hp<=0):
                     print("plane2 lost lwi!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane2.model_lwi.remove() #remove model
                     self.plane2.has_lwi=False
                     #remove lwo too if it still exists
                     if(self.plane2.has_lwo):
                         self.plane2.lwouter_cNodePath.remove()
+                        self.plane2.model_lwo.remove()
                         self.plane2.has_lwo=False
                         print("and lwo!")
                     
@@ -290,10 +298,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 if(self.plane1.rwi_hp<=0):
                     print("plane1 lost rwi!")
                     cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane1.model_rwi.remove() #remove model
                     self.plane1.has_rwi=False
                     #remove rwo too if it still exists
                     if(self.plane1.has_rwo):
                         self.plane1.rwouter_cNodePath.remove()
+                        self.plane1.model_rwo.remove()
                         self.plane1.has_rwo=False
                         print("and rwo!")
                     
@@ -303,11 +313,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 print("plane2 right inner wing hp = " + str(self.plane2.rwi_hp))
                 if(self.plane2.rwi_hp<=0):
                     print("plane2 lost rwi!")
-                    cEntry.getIntoNodePath().remove()
+                    cEntry.getIntoNodePath().remove() #remove cnode
+                    self.plane2.model_rwi.remove() #remove model
                     self.plane2.has_rwi=False
                     #remove rwo too if it still exists
                     if(self.plane2.has_rwo):
                         self.plane2.rwouter_cNodePath.remove()
+                        self.plane2.model_rwo.remove()
                         self.plane2.has_rwo=False
                         print("and rwo!")
             else:
