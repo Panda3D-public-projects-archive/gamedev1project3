@@ -7,7 +7,7 @@ from pandac.PandaModules import * #basic Panda modules
 from direct.interval.IntervalGlobal import *
 
 density = 5000
-bulletVelocity = 1000
+bulletVelocity = -1000
 
 class PlanePart(DirectObject):
     def __init__(self, name, hp, model, parent, sphereData):
@@ -158,14 +158,16 @@ class Plane(DirectObject):
     #############################################################
     ############################################################
         print(self.name + " SHOOT")
-        self.bullet = loader.loadModel("smiley")
-        self.bullet.setScale(.5)
-        self.bullet.reparentTo(render)
-        self.bullet.setPos(self.plane.getPos())
-        velocity = self.plane.node().getPhysicsObject().getVelocity()
-        velocity += velocity.normalize() * bulletVelocity
-        self.trajectory = ProjectileInterval(self.bullet, startPos = Point3(self.bullet.getPos()),duration = 1, startVel = Vec3(velocity))
-        self.trajectory.start()
+        bullet = loader.loadModel("smiley")
+        bullet.setScale(1)
+        bullet.reparentTo(render)
+        bullet.setPos(self.plane.getPos())
+        bullet.setHpr(self.plane.getHpr())
+        velocity= self.plane.node().getPhysicsObject().getVelocity()
+        #velocity += (velocity.normalize() * bulletVelocity)
+        trajectory = ProjectileInterval(bullet, startPos = Point3(bullet.getPos()),duration = 1, startVel=velocity)
+        print(velocity)
+        trajectory.start()
         
     def setupLights(self):
     
