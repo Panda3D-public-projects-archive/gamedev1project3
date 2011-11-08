@@ -6,6 +6,20 @@ from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
 from direct.interval.IntervalGlobal import *
 
+density = 5000
+bulletVelocity = 1000
+
+class PlanePart(DirectObject):
+    def __init__(self, name, hp, model, parent, sphereData):
+        self.hp = hp
+        self.max_hp = hp
+        
+        #collision model
+        collision = CollisionSphere(*sphereData)
+        self.collisionNode = CollisionNode(name + "_collision")
+        self.collisionNode.addSolid(collision)
+        self.collisionNode.reparentTo(parent)
+
 class Plane(DirectObject):
     def __init__(self,camera,name):
         #load model
@@ -148,7 +162,8 @@ class Plane(DirectObject):
         self.bullet.setScale(.5)
         self.bullet.reparentTo(render)
         self.bullet.setPos(self.plane.getPos())
-        velocity = self.plane.node().getPhysicsObject().getVelocity()#.something or + somethin ghere
+        velocity = self.plane.node().getPhysicsObject().getVelocity()
+        velocity += velocity.normalize() * bulletVelocity
         self.trajectory = ProjectileInterval(self.bullet, startPos = Point3(self.bullet.getPos()),duration = 1, startVel = Vec3(velocity))
         self.trajectory.start()
         
