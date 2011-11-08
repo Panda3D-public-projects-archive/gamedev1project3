@@ -147,8 +147,9 @@ class Plane(DirectObject):
         self.bullet = loader.loadModel("smiley")
         self.bullet.setScale(.5)
         self.bullet.reparentTo(render)
-        self.bullet.setPos(self.plane.getX(), self.plane.getY(),self.plane.getZ()+5)
-        self.trajectory = ProjectileInterval(self.bullet, startPos = Point3(self.bullet.getPos()),duration = 1, startVel = Vec3(0,10,0))
+        self.bullet.setPos(self.plane.getPos())
+        velocity = self.plane.node().getPhysicsObject().getVelocity()#.something or + somethin ghere
+        self.trajectory = ProjectileInterval(self.bullet, startPos = Point3(self.bullet.getPos()),duration = 1, startVel = Vec3(velocity))
         self.trajectory.start()
         
     def setupLights(self):
