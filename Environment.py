@@ -35,7 +35,7 @@ class Environment(DirectObject):
         self.groundNode.addSolid(self.ground)
         self.groundNodePath = self.env.attachNewNode(self.groundNode)
         self.groundNodePath.node().setFromCollideMask(BitMask32.allOff())
-        self.groundNodePath.show()
+        #self.groundNodePath.show()
         
         
         
