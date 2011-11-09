@@ -18,3 +18,16 @@ class Environment(DirectObject):
         self.envNode.reparentTo(self.dome)
         self.envNode.node().setFromCollideMask(BitMask32.allOff())
         self.dome.setScale(10)
+        
+        
+        #resorting to simple collision since .egg collision hates us
+        
+        self.groundNode = CollisionNode("ground")
+        self.ground = CollisionPlane(Plane(Vec3(0,0,1),Point3(0,0,0)))
+        self.groundNode.addSolid(self.ground)
+        self.groundNodePath = self.dome.attachNewNode(self.groundNode)
+        self.groundNodePath.node().setFromCollideMask(BitMask32.allOff())
+        self.groundNodePath.show()
+        
+        
+        
