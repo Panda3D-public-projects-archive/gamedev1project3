@@ -9,15 +9,18 @@ from Bullet import *
 #GLOBALS
 density = 5000
 bulletVelocity = -1000
-baseDrag = .1
+baseDrag = .06
 gravityForce = Vec3(0, 0, -9.81)
-fullThrottleForce = 100
+fullThrottleForce = 300
 
+#rate of change, per second, of the various controls
 controlFactors = {
-    "throttle":1,
-    "pitch":100,
-    "yaw":40,
-    "roll":100
+    "throttle":1, #scales from 0 to 1
+    
+    #these scale from -Limit to Limit (see controlLimits, below)
+    "pitch":200,
+    "yaw":100,
+    "roll":200
 }
 
 controlLimits = {
@@ -25,8 +28,6 @@ controlLimits = {
     "yaw":30,
     "roll":50
 }
-
-#base.enableParticles()
 
 class MyPlane(DirectObject):
     def __init__(self,camera,name):

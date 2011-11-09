@@ -44,9 +44,14 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("escape", sys.exit)
         
         self.plane1.mapKeys("r", "f", "throttle")
-        self.plane1.mapKeys("s", "w", "pitch") #inveryed
+        self.plane1.mapKeys("w", "s", "pitch") #inverted
         self.plane1.mapKeys("a", "d", "yaw")
         self.plane1.mapKeys("q", "e", "roll")
+        
+        self.plane2.mapKeys("o", "l", "throttle")
+        self.plane2.mapKeys("u", "j", "pitch") #inverted
+        self.plane2.mapKeys("h", "k", "yaw")
+        self.plane2.mapKeys("y", "i", "roll")
         
         #collision stuff
         self.accept("collide-tail_plane1", self.planeCollisions)
@@ -69,7 +74,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #projectile/guns stuff
         self.accept("space",self.shootprep1)
-        #self.accept("space", self.shootprep2)
+        self.accept("space", self.shootprep2)
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
