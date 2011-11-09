@@ -315,6 +315,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 print("plane1 left inner wing hp = " + str(self.plane1.lwi_hp))
                 if(self.plane1.lwi_hp<=0):
                     print("plane1 lost lwi!")
+                    self.plane1.canFireLeft=False
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.model_lwi.remove() #remove model
                     self.plane1.has_lwi=False
@@ -332,6 +333,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 print("plane2 left inner wing hp = " + str(self.plane1.lwi_hp))
                 if(self.plane2.lwi_hp<=0):
                     print("plane2 lost lwi!")
+                    self.plane2.canFireLeft = False
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane2.model_lwi.remove() #remove model
                     self.plane2.has_lwi=False
@@ -349,6 +351,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 print("plane1 right inner wing hp = " + str(self.plane1.rwi_hp))
                 if(self.plane1.rwi_hp<=0):
                     print("plane1 lost rwi!")
+                    self.plane1.canFireRight=False
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.model_rwi.remove() #remove model
                     self.plane1.has_rwi=False
@@ -366,6 +369,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 print("plane2 right inner wing hp = " + str(self.plane2.rwi_hp))
                 if(self.plane2.rwi_hp<=0):
                     print("plane2 lost rwi!")
+                    self.plane2.canFireRight = False
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane2.model_rwi.remove() #remove model
                     self.plane2.has_rwi=False

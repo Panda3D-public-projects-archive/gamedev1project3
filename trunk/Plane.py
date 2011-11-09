@@ -9,13 +9,13 @@ from Bullet import *
 #GLOBALS
 bulletVelocity = -1000
 baseDrag = .1
-fullThrottleForce = 250
+fullThrottleForce = 100
 
 def maxVelocity():
     #return (1-baseDrag) * fullThrottleForce / baseDrag
     return 100
 
-gravityForce = Vec3(0, 0, -30)
+gravityForce = Vec3(0, 0, -0)
 
 liftPower = (1, -1) #lift and angle
 
@@ -123,7 +123,7 @@ class MyPlane(DirectObject):
         }
         
         #movement
-        self.throttle = .5
+        self.throttle = 0
         self.velocity = Vec3(0, 0, 0)
         self.rotation = Vec3(0, 0, 0) #the current rotational velocity
         
@@ -198,8 +198,8 @@ class MyPlane(DirectObject):
         
     def runControl(self, control, direction):
         self.controls[control] += (1 if direction == "up" else -1) * controlFactors[control]
-        print " ".join((control, direction))
-        print self.controls
+        #print " ".join((control, direction))
+        #print self.controls
         
         
     def mapKeys(self, forwardKey, backwardKey, control):
@@ -257,7 +257,7 @@ class MyPlane(DirectObject):
         self.velocity *= (1 - baseDrag)
         
         #gravity
-        #self.velocity += gravityForce * elapsed
+        self.velocity += gravityForce * elapsed
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
