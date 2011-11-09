@@ -212,9 +212,9 @@ class MyPlane(DirectObject):
         #acceleration & gravity
         thrust = self.plane.getQuat().getForward() * -1
         thrust.normalize()
-        thrust *= (self.throttle * fullThrottleForce)
+        thrust *= (math.sqrt(self.throttle) * fullThrottleForce) #sqrt used here for more expressive throttling
         self.velocity += thrust * elapsed
-       # self.velocity += gravityForce * elapsed
+       #self.velocity += gravityForce * elapsed
         
         #air drag
         self.velocity *= (1 - baseDrag)
