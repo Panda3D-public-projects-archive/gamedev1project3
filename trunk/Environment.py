@@ -11,5 +11,5 @@ class Environment(DirectObject):
         #load the models and set up the corresponding collision bodies
         self.dome = loader.loadModel("models/environment")
         self.dome.reparentTo(render)
-        
+        #self.colDome = loader.loadModel("models/env_collision")
         

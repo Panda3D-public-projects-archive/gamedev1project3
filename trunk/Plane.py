@@ -58,7 +58,7 @@ class MyPlane(DirectObject):
             
         self.model2 = loader.loadModel("models/panda-model")
         self.model2.setScale(.008)
-        self.model2.setPos(0,30,-5)
+        self.model2.setPos(0,40,-3)
         self.model2.reparentTo(self.plane)
         #self.model.reparentTo(self.plane)
         self.plane.setScale(.05)
