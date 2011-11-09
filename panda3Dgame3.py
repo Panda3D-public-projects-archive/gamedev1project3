@@ -102,7 +102,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         # taskMgr.add(self.uiText, "uiTask")
         
         #bullet list
-        self.bullets = deque()
+        self.bullets = set()
         
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)
@@ -559,13 +559,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
         else:
             "what the f$%k did I hit!?!"
     
-    def clearBullet(self, task):
-        bullet = self.bullets.popleft()
+    def clearBullet(self, bullet):
         base.cTrav.removeCollider(bullet.cNodePath)
         self.cHandler.removeCollider(bullet.cNodePath)
-        del bullet.trajectory
+        bullet.trajectory.finish()
+        bullet.bullet.removeNode()
         print "removed"
-        return task.done
+        return Task.done
         
     def shootprep1(self):
         if self.plane1.fireRight: #right guns turn
@@ -592,11 +592,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * 100
         base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
         self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-        self.bullets.append(bullet)
+        #self.bullets.append(bullet)
         #print(pos)
         bullet.fire(vel,self.plane1.plane.getHpr())
         self.machinegun.play()
-        taskMgr.doMethodLater(5, self.clearBullet, 'clear_bullet')
+        taskMgr.doMethodLater(bullet.trajectory.getDuration(), self.clearBullet, 'clear_bullet', extraArgs=[bullet])
     
     def shootprep2(self):
         if self.plane2.fireRight: #right guns turn
@@ -623,11 +623,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         vel= self.plane2.velocity + self.plane2.plane.getQuat().getForward() * -1 * 100
         base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
         self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-        self.bullets.append(bullet)
+        #self.bullets.append(bullet)
         #print(pos)
         bullet.fire(vel,self.plane2.plane.getHpr())
         self.machinegun.play()
-        taskMgr.doMethodLater(5, self.clearBullet, 'clear_bullet')
+        taskMgr.doMethodLater(bullet.trajectory.getDuration(), self.clearBullet, 'clear_bullet', extraArgs=[bullet])
         
     # def uiText(self,task):
         # self.textObject.remove()

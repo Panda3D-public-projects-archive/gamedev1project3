@@ -19,9 +19,6 @@ class Bullet(DirectObject):
         self.cNode.addSolid(self.cTube)
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
         self.cNodePath.show()
-    
-    def __del__(self):
-        self.bullet.removeNode()
         
     
     def fire(self, velocity,hpr):
