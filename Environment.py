@@ -12,22 +12,33 @@ class Environment(DirectObject):
         self.model = loader.loadModel("models/simple_env")
         self.model.reparentTo(render)
         self.model.setPos(0,0,0)
-        self.dome =render.attachNewNode(ActorNode('dummy env'))
-        self.model.reparentTo(self.dome)
+        self.env=render.attachNewNode(ActorNode('dummy env'))
+        self.model.reparentTo(self.env)
         self.envNode = self.model.find("**/coll_ground")
-        self.envNode.reparentTo(self.dome)
+        self.envNode.reparentTo(self.env)
         self.envNode.node().setFromCollideMask(BitMask32.allOff())
-        self.dome.setScale(10)
+        self.env.setScale(10)
         
+        #bounding dome
+        self.dome_model = loader.loadModel("models/dome_enough")
+        self.domeNode = CollisionNode("dome")
+        self.dome = CollisionInvSphere(0,0,0,200)
+        self.domeNode.addSolid(self.dome)
+        self.domeNodePath = self.env.attachNewNode(self.domeNode)
+        self.domeNodePath.node().setFromCollideMask(BitMask32.allOff())
+        #self.domeNodePath.show()
         
         #resorting to simple collision since .egg collision hates us
         
         self.groundNode = CollisionNode("ground")
         self.ground = CollisionPlane(Plane(Vec3(0,0,1),Point3(0,0,0)))
         self.groundNode.addSolid(self.ground)
-        self.groundNodePath = self.dome.attachNewNode(self.groundNode)
+        self.groundNodePath = self.env.attachNewNode(self.groundNode)
         self.groundNodePath.node().setFromCollideMask(BitMask32.allOff())
         self.groundNodePath.show()
+        
+        
+        
         
         
         
