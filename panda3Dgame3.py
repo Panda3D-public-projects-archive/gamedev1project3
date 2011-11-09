@@ -9,6 +9,7 @@ from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
+from decimal import Decimal,ROUND_DOWN
 from direct.gui.OnscreenText import OnscreenText
 from Plane import *
 from Environment import *
@@ -88,6 +89,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
+        
+        #ui task
+        self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
+        self.textObject.reparentTo(render2d)
+        taskMgr.add(self.uiText, "uiTask")
         
         
         
@@ -169,9 +175,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.cTrav.addCollider(self.plane2.bodyrear_cNodePath, self.cHandler)
         self.cHandler.addCollider(self.plane2.bodyrear_cNodePath, self.plane2.plane)
         
-        #ui text
-        textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
-        textObject.reparentTo(render2d)
+
         
         
         
@@ -528,6 +532,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
         self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
         bullet.fire(vel,pos)
+        
+    def uiText(self,task):
+        self.textObject.remove()
+        throttle = Decimal(str(self.plane1.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
+        self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
+        return task.cont
                 
                 
             
