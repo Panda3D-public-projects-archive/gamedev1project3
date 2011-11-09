@@ -186,12 +186,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
     def setupLights(self):
         #ambient light
-        self.ambientLight = AmbientLight("ambientLight")
+        #self.ambientLight = AmbientLight("ambientLight")
         #four values, RGBA (alpha is largely irrelevent), value range is 0:1
-        self.ambientLight.setColor((.25, .25, .25, 1))
-        self.ambientLightNP = render.attachNewNode(self.ambientLight)
+        #self.ambientLight.setColor((.25, .25, .25, 1))
+        #self.ambientLightNP = render.attachNewNode(self.ambientLight)
         #the nodepath that calls setLight is what gets illuminated by the light
-        render.setLight(self.ambientLightNP)
+        #render.setLight(self.ambientLightNP)
         #call clearLight() to turn it off
         
         render.setShaderAuto()
@@ -254,6 +254,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.model_tail.remove() #remove model
                     self.plane1.has_tail=False
+                    self.plane1.controlLimits["yaw"] = 0
+                    self.plane1.controlLimits["pitch"] = 10
+                    self.plane1.controlFactors["yaw"] = 10
                     
             #plane2 tail
             elif str(cEntry.getIntoNodePath()) =="render/plane2/tail_plane2":
@@ -264,6 +267,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() # remove cnode
                     self.plane2.model_tail.remove() #remove model
                     self.plane2.has_tail = False
+                    self.plane2.controlLimits["yaw"] = 0
+                    self.plane2.controlLimits["pitch"] = 10
+                    self.plane2.controlFactors["yaw"] = 10
                     
             #plane1 left outer wing
             elif str(cEntry.getIntoNodePath()) == "render/plane1/lwouter_plane1":
