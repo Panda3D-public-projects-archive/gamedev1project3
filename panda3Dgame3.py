@@ -44,7 +44,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("escape", sys.exit)
         
         self.plane1.mapKeys("r", "f", "throttle")
-        self.plane1.mapKeys("w", "s", "pitch")
+        self.plane1.mapKeys("s", "w", "pitch")
         self.plane1.mapKeys("a", "d", "yaw")
         self.plane1.mapKeys("q", "e", "roll")
         
