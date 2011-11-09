@@ -176,14 +176,14 @@ class MyPlane(DirectObject):
         
         
         self.spotlight1 = Spotlight('spotlight1') 
-        self.spotlight1.setColor((.5,.5,.5,1)) 
+        self.spotlight1.setColor((.6,.6,.6,1)) 
         self.spotlight1.setLens(PerspectiveLens()) 
         self.spotlight1.getLens().setFov(15,15) 
         self.spotlight1.getLens().setNearFar(20,20) 
         self.spotlight1.setExponent(45)
         
         self.spotlight2 = Spotlight('spotlight2') 
-        self.spotlight2.setColor((.5,.5,.5,1)) 
+        self.spotlight2.setColor((.6,.6,.6,1)) 
         self.spotlight2.setLens(PerspectiveLens()) 
         self.spotlight2.getLens().setFov(15,15) 
         self.spotlight2.getLens().setNearFar(20,20) 
