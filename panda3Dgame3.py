@@ -100,7 +100,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #player 1 plane
         self.plane1 = MyPlane(base.camList[0],"plane1")
-        self.plane1.plane.setPos(5,0,0)
+        self.plane1.plane.setPos(5,0,100)
         #add pieces for collisions
         #tail
         base.cTrav.addCollider(self.plane1.tail_cNodePath, self.cHandler)
@@ -127,7 +127,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #player 2 plane
         self.plane2 = MyPlane(base.camList[1], "plane2")
-        self.plane2.plane.setPos(20,0,0)
+        self.plane2.plane.setPos(20,0,100)
         #add pieces for collisions
         #tail
         base.cTrav.addCollider(self.plane2.tail_cNodePath, self.cHandler)
