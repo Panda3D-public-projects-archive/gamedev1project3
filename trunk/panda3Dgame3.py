@@ -541,8 +541,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
         if self.plane1.canFireRight or self.plane1.canFireLeft:
-            vel= Vec3(0,10,0)
-            pos = Point3(self.plane1.plane.getX(), self.plane1.plane.getY(), self.plane1.plane.getZ()+5)
+            vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * bulletVelocity
+            pos = self.plane1.plane.getPos()
             bullet = Bullet()
             base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
             self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
