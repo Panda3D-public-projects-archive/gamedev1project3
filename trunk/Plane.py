@@ -85,6 +85,9 @@ class MyPlane(DirectObject):
         self.camera.setPos(0,120,60)
         self.camera.setH(180)
         self.camera.setP(-10)
+        
+        #bullet list
+        self.bullets = []
        
         
     def setupCollision(self):
@@ -155,22 +158,7 @@ class MyPlane(DirectObject):
         
         self.prevtime = task.time
         return Task.cont
-        
-    def shoot(self):
-    #############################################################
-    ## ATTENTION: if you get the error "global name 'Parabolaf' is
-    ##not defined either a) pick up the latest release for fix or b)
-    ##hand edit <panda location>/direct/interval/ProjectileInterval.py 
-    ##and rename Parabolaf with LParabola
-    #############################################################
-    ############################################################
-        #vel doesnt work but will hold for filler right now
-        #vel = self.plane.node().getPhysicsObject().getVelocity()
-        #vel+= vel.normalize() * bulletVelocity
-        vel= Vec3(0,10,0)
-        pos = Point3(self.plane.getX(), self.plane.getY(), self.plane.getZ()+15)
-        bullet = Bullet()
-        bullet.fire(vel,pos)
+
         
     def setupLights(self):
         
