@@ -20,7 +20,7 @@ class Environment(DirectObject):
         self.env.setScale(10)
         
         #bounding dome
-        self.dome_model = loader.loadModel("models/dome_enough")
+        self.dome_model = loader.loadModel("models/dome_again")
         self.domeNode = CollisionNode("dome")
         self.dome = CollisionInvSphere(0,0,0,200)
         self.domeNode.addSolid(self.dome)
