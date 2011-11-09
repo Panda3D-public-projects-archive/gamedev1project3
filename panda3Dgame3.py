@@ -170,7 +170,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.cHandler.addCollider(self.plane2.bodyrear_cNodePath, self.plane2.plane)
         
         #ui text
-        textObject = OnscreenText(text=self.plane1.throttle, pos = (-.5,.02), scale=.07)
+        textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
         textObject.reparentTo(render2d)
         
         
