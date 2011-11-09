@@ -23,11 +23,11 @@ class Environment(DirectObject):
         self.dome_model = loader.loadModel("models/dome_again")
         self.dome_model.setScale(5)
         self.domeNode = CollisionNode("dome")
-        self.dome = CollisionInvSphere(0,0,0,100)
+        self.dome = CollisionInvSphere(0,0,0,200)
         self.domeNode.addSolid(self.dome)
         self.domeNodePath = self.env.attachNewNode(self.domeNode)
         self.domeNodePath.node().setFromCollideMask(BitMask32.allOff())
-        #self.domeNodePath.show()
+        self.domeNodePath.show()
         
         #resorting to simple collision since .egg collision hates us
         
