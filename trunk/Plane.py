@@ -17,7 +17,7 @@ def maxVelocity():
 
 gravityForce = Vec3(0, 0, -30)
 
-liftPower = (1, -1) #lift and angle
+liftPower = (2, -3) #lift and angle
 
 #rate of change, per second, of the various controls
 controlFactors = {
@@ -123,7 +123,7 @@ class MyPlane(DirectObject):
         }
         
         #movement
-        self.throttle = 0
+        self.throttle = .5
         self.velocity = Vec3(0, 0, 0)
         self.rotation = Vec3(0, 0, 0) #the current rotational velocity
         
