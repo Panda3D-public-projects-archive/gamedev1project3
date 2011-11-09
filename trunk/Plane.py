@@ -173,10 +173,6 @@ class MyPlane(DirectObject):
         bullet.fire(vel,pos)
         
     def setupLights(self):
-        #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
-        #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
-        #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
-        #self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
         
         lens = PerspectiveLens()
         spotlight = Spotlight('spotlight') 
