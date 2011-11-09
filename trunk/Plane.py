@@ -29,21 +29,21 @@ class MyPlane(DirectObject):
         self.camera = camera
         self.plane = render.attachNewNode(ActorNode(name))
         #self.model = loader.loadModel("models/mig-3")
-        self.model_body = loader.loadModel("models/body")
+        self.model_body = loader.loadModel("models/body_w")
         self.model_body.reparentTo(self.plane)
-        self.model_tail = loader.loadModel("models/tail")
+        self.model_tail = loader.loadModel("models/tail_w")
         self.model_tail.reparentTo(self.plane)
         self.model_tail.setPos(0,0,0)
-        self.model_rwo=loader.loadModel("models/right_tip")
+        self.model_rwo=loader.loadModel("models/right_tip_w")
         self.model_rwo.reparentTo(self.plane)
         self.model_rwo.setPos(0,0,0)
-        self.model_lwo=loader.loadModel("models/left_tip")
+        self.model_lwo=loader.loadModel("models/left_tip_w")
         self.model_lwo.reparentTo(self.plane)
         self.model_lwo.setPos(0,0,0)
-        self.model_rwi=loader.loadModel("models/right_wing")
+        self.model_rwi=loader.loadModel("models/right_wing_w")
         self.model_rwi.reparentTo(self.plane)
         self.model_rwi.setPos(0,0,0)
-        self.model_lwi=loader.loadModel("models/left_wing")
+        self.model_lwi=loader.loadModel("models/left_wing_w")
         self.model_lwi.reparentTo(self.plane)
         self.model_lwi.setPos(0,0,0)
         self.model2 = loader.loadModel("models/panda-model")
@@ -82,7 +82,7 @@ class MyPlane(DirectObject):
         
         #camera on tail
         self.camera.reparentTo(self.plane)
-        self.camera.setPos(0,120,60)
+        self.camera.setPos(0,120,30)
         self.camera.setH(180)
         self.camera.setP(-10)
         
@@ -154,7 +154,7 @@ class MyPlane(DirectObject):
             angle = deg2Rad(self.plane.getH())
             dx = dist * math.sin(angle)
             dy = dist * -math.cos(angle)
-            self.plane.setPos(self.plane.getX() + dx, self.plane.getY() + dy, 0)
+            self.plane.setPos(self.plane.getX() + dx, self.plane.getY() + dy, self.plane.getZ())
         
         self.prevtime = task.time
         return Task.cont
