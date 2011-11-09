@@ -11,14 +11,12 @@ from direct.task import Task         #for update fuctions
 import sys, math, random
 from Plane import *
 from Environment import *
-
+from Bullet import *
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
         #turn off mouse control, otherwise camera is not repositionable
         base.disableMouse()
-        
-        
         
         #set up for split screen
         #first window (default window)
@@ -76,8 +74,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         
         #projectile/guns stuff
-        self.accept("q",self.plane2.shoot)
-        self.accept("/", self.plane1.shoot)
+        self.accept("/",self.shootprep1)
+        self.accept("q", self.shootprep2)
+        
+        #bullet collisions
+        self.accept("collide-bullet", self.bulletCollision)
         
         
         
@@ -333,6 +334,31 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         print("and rwo!")
             else:
                 "what the f$%k did I hit!?!"
+                
+    def bulletCollision(self,cEntry):
+        print(cEntry.getFromNodePath())
+        
+    def shootprep1(self):
+        #vel doesnt work but will hold for filler right now
+        #vel = self.plane.node().getPhysicsObject().getVelocity()
+        #vel+= vel.normalize() * bulletVelocity
+        vel= Vec3(0,10,0)
+        pos = Point3(self.plane1.plane.getX(), self.plane1.plane.getY(), self.plane1.plane.getZ()+5)
+        bullet = Bullet()
+        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+        bullet.fire(vel,pos)
+    
+    def shootprep2(self):
+        #vel doesnt work but will hold for filler right now
+        #vel = self.plane.node().getPhysicsObject().getVelocity()
+        #vel+= vel.normalize() * bulletVelocity
+        vel= Vec3(0,10,0)
+        pos = Point3(self.plane2.plane.getX(), self.plane2.plane.getY(), self.plane2.plane.getZ()+5)
+        bullet = Bullet()
+        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+        bullet.fire(vel,pos)
                 
                 
             
