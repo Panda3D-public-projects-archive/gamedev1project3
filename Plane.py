@@ -115,12 +115,7 @@ class MyPlane(DirectObject):
         self.has_rwi=True
         
         #controls
-        self.controls = {
-            "throttle":0,
-            "pitch":0,
-            "yaw":0,
-            "roll":0
-        }
+        self.resetControls()
         
         #movement
         self.throttle = .5
