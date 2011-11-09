@@ -1,10 +1,10 @@
 <CoordinateSystem> { Y-Up }
 
 <Comment> {
-  "maya2egg2012 -cs y-up -a model -cn MiG-3_parts_w -o 'C:\Users\lancit\Desktop\pandastuff\scenes\body_w.egg' 'C:\Users\lancit\Desktop\pandastuff\scenes\plane-2-3.mb'"
+  "maya2egg2012 -cs y-up -a model -cn MiG-3_parts_w -o 'C:\Users\lancit\Desktop\pandastuff\body_w.egg' 'C:\Users\lancit\Desktop\pandastuff\scenes\plane-2-3.mb'"
 }
 <Texture> lambert6SG {
-  "../sourceimages/inUV2.bmp"
+  "sourceimages/inUV2.bmp"
   <Scalar> wrapu { repeat }
   <Scalar> wrapv { repeat }
   <Scalar> minfilter { linear_mipmap_linear }
