@@ -71,7 +71,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #projectile/guns stuff
         self.accept("space",self.shootprep1)
-        self.accept("space", self.shootprep2)
+        #self.accept("space", self.shootprep2)
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
@@ -541,12 +541,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
         if self.plane1.canFireRight or self.plane1.canFireLeft:
-            vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * bulletVelocity
+            vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * 100
+            #print(vel)
             pos = self.plane1.plane.getPos()
             bullet = Bullet()
             base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
             self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-            bullet.fire(vel,pos)
+            bullet.fire(vel,pos,self.plane1.plane.getHpr())
         self.machinegun.play()
     
     def shootprep2(self):
@@ -554,12 +555,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
         if self.plane2.canFireRight or self.plane2.canFireLeft:
-            vel= Vec3(0,10,0)
-            pos = Point3(self.plane2.plane.getX(), self.plane2.plane.getY(), self.plane2.plane.getZ()+5)
+            vel= self.plane2.velocity + self.plane2.plane.getQuat().getForward() * -1 * 100
+            #print(vel)
+            pos = self.plane1.plane.getPos()
             bullet = Bullet()
             base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
             self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-            bullet.fire(vel,pos)
+            bullet.fire(vel,pos,self.plane2.plane.getHpr())
         self.machinegun.play()
         
     def uiText(self,task):
