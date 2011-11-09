@@ -17,7 +17,7 @@ class Bullet(DirectObject):
         self.cTube = CollisionTube(0,-1,0,0,1,0,.42)
         self.cNode.addSolid(self.cTube)
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
-        self.cNodePath.show()    
+        #self.cNodePath.show()    
     
     def fire(self, velocity, pos):
     #############################################################
@@ -28,5 +28,5 @@ class Bullet(DirectObject):
     #############################################################
     ############################################################
         print(" SHOOT")
-        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ=0)
+        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ=.3)
         self.trajectory.start()
