@@ -37,6 +37,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         self.loadModels()
         self.setupLights()
+        self.setupSounds()
         render.setShaderAuto() #you probably want to use this
         
         #input
@@ -199,21 +200,31 @@ class World(DirectObject): #subclassing here is necessary to accept events
             if str(cEntry.getIntoNodePath())=="render/plane1/bodyfront_plane1" or str(cEntry.getIntoNodePath())=="render/plane1/bodymid_plane1" or str(cEntry.getIntoNodePath())=="render/plane1/bodyrear_plane1":
                 self.plane1.body_hp-=1
                 print("plane1 body hp = " + str(self.plane1.body_hp))
+                if(self.plane1.body_hp < 16):
+                    self.engine1.stop()
+                    self.engine_damaged1.setLoopCount(0)
+                    self.engine_damaged1.play()
                 #check for game over
                 if(self.plane1.body_hp<=0):
                     print("plane1 dead!")
                     #remove whole plane
                     cEntry.getIntoNodePath().getParent().remove()
+                    self.explosion.play()
                 
             #plane 2 body
             elif str(cEntry.getIntoNodePath()) == "render/plane2/bodyfront_plane2" or str(cEntry.getIntoNodePath())== "render/plane2/bodymid_plane2" or str(cEntry.getIntoNodePath())== "render/plane2/bodyrear_plane2":
                 self.plane2.body_hp-=1
                 print("plane2 body hp = " + str(self.plane2.body_hp))
+                if(self.plane2.body_hp < 16):
+                    self.engine2.stop()
+                    self.engine_damaged2.setLoopCount(0)
+                    self.engine_damaged2.play()
                 #check for game over
                 if(self.plane2.body_hp<=0):
                     print("plane2 dead!")
                     #remove whole plane
                     cEntry.getIntoNodePath().getParent().remove()
+                    self.explosion.play()
                 
             #plane 1 tail
             elif str(cEntry.getIntoNodePath()) == "render/plane1/tail_plane1":
@@ -294,6 +305,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         self.plane1.model_lwo.remove()
                         self.plane1.has_lwo=False
                         print("and lwo!")
+                        render.clearLight(self.plane1.spotlightNP2)
                     
             #plane 2 left inner wing
             elif str(cEntry.getIntoNodePath()) == "render/plane2/lwinner_plane2":
@@ -310,6 +322,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         self.plane2.model_lwo.remove()
                         self.plane2.has_lwo=False
                         print("and lwo!")
+                        render.clearLight(self.plane2.spotlightNP2)
                     
             #plane 1 right inner wing
             elif str(cEntry.getIntoNodePath()) == "render/plane1/rwinner_plane1":
@@ -326,6 +339,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         self.plane1.model_rwo.remove()
                         self.plane1.has_rwo=False
                         print("and rwo!")
+                        render.clearLight(self.plane1.spotlightNP1)
                     
             #plane 2 right inner wing
             elif str(cEntry.getIntoNodePath()) == "render/plane2/rwinner_plane2":
@@ -342,6 +356,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         self.plane2.model_rwo.remove()
                         self.plane2.has_rwo=False
                         print("and rwo!")
+                        render.clearLight(self.plane2.spotlightNP1)
             else:
                 "what the f$%k did I hit!?!"
                 
@@ -350,6 +365,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         if str(cEntry.getFromNodePath())=="render/plane1/bodyfront_plane1" or str(cEntry.getFromNodePath())=="render/plane1/bodymid_plane1" or str(cEntry.getFromNodePath())=="render/plane1/bodyrear_plane1":
             self.plane1.body_hp-=1
             print("plane1 body hp = " + str(self.plane1.body_hp))
+            self.bullet_hit.play()
+            if(self.plane1.body_hp < 16):
+                self.engine1.stop()
+                self.engine_damaged1.setLoopCount(0)
+                self.engine_damaged1.play()
             #check for game over
             if(self.plane1.body_hp<=0):
                 print("plane1 dead!")
@@ -359,7 +379,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane 2 body
         elif str(cEntry.getFromNodePath()) == "render/plane2/bodyfront_plane2" or str(cEntry.getFromNodePath())== "render/plane2/bodymid_plane2" or str(cEntry.getFromNodePath())== "render/plane2/bodyrear_plane2":
             self.plane2.body_hp-=1
+            self.bullet_hit.play()
             print("plane2 body hp = " + str(self.plane2.body_hp))
+            if(self.plane2.body_hp < 16):
+                self.engine2.stop()
+                self.engine_damaged2.setLoopCount(0)
+                self.engine_damaged2.play()
             #check for game over
             if(self.plane2.body_hp<=0):
                 print("plane2 dead!")
@@ -369,6 +394,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane 1 tail
         elif str(cEntry.getFromNodePath()) == "render/plane1/tail_plane1":
             self.plane1.tail_hp-=1
+            self.bullet_hit.play()
             print("plane1 tail hp = " + str(self.plane1.tail_hp))
             if(self.plane1.tail_hp<=0):
                 print("plane1 lost tail!")
@@ -379,6 +405,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane2 tail
         elif str(cEntry.getFromNodePath()) =="render/plane2/tail_plane2":
             self.plane2.tail_hp-=1
+            self.bullet_hit.play()
             print("plane2 tail hp = " + str(self.plane2.tail_hp))
             if(self.plane2.tail_hp<=0):
                 print("plane2 lost tail!")
@@ -389,6 +416,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane1 left outer wing
         elif str(cEntry.getFromNodePath()) == "render/plane1/lwouter_plane1":
             self.plane1.lwo_hp-=1
+            self.bullet_hit.play()
             print("plane1 left outer wing hp = " + str(self.plane1.lwo_hp))
             if(self.plane1.lwo_hp<=0):
                 print("plane1 lost lwo!")
@@ -400,6 +428,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane2 left outer wing
         elif str(cEntry.getFromNodePath()) =="render/plane2/lwouter_plane2":
             self.plane2.lwo_hp-=1
+            self.bullet_hit.play()
             print("plane2 left outer wing hp = " + str(self.plane2.lwo_hp))
             if(self.plane2.lwo_hp<=0):
                 print("plane2 lost lwo!")
@@ -411,6 +440,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane1 right outer wing
         elif str(cEntry.getFromNodePath()) =="render/plane1/rwouter_plane1":
             self.plane1.rwo_hp-=1
+            self.bullet_hit.play()
             print("plane1 right outer wing hp = " + str(self.plane1.rwo_hp))
             if(self.plane1.rwo_hp<=0):
                 print("plane1 lost rwo!")
@@ -422,6 +452,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane2 right outer wing
         elif str(cEntry.getFromNodePath()) == "render/plane2/rwouter_plane2":
             self.plane2.rwo_hp-=1
+            self.bullet_hit.play()
             print("plane2 right outer wing hp = " + str(self.plane2.rwo_hp))
             if(self.plane2.rwo_hp<=0):
                 print("plane2 lost rwo!")
@@ -433,6 +464,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #plane1 left inner wing
         elif str(cEntry.getFromNodePath()) == "render/plane1/lwinner_plane1":
             self.plane1.lwi_hp -=1
+            self.bullet_hit.play()
             print("plane1 left inner wing hp = " + str(self.plane1.lwi_hp))
             if(self.plane1.lwi_hp<=0):
                 print("plane1 lost lwi!")
@@ -445,10 +477,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     self.plane1.model_lwo.remove()
                     self.plane1.has_lwo=False
                     print("and lwo!")
+                    render.clearLight(self.plane1.spotlightNP2)
                 
         #plane 2 left inner wing
         elif str(cEntry.getFromNodePath()) == "render/plane2/lwinner_plane2":
             self.plane2.lwi_hp-=1
+            self.bullet_hit.play()
             print("plane2 left inner wing hp = " + str(self.plane1.lwi_hp))
             if(self.plane2.lwi_hp<=0):
                 print("plane2 lost lwi!")
@@ -461,10 +495,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     self.plane2.model_lwo.remove()
                     self.plane2.has_lwo=False
                     print("and lwo!")
+                    render.clearLight(self.plane2.spotlightNP2)
                 
         #plane 1 right inner wing
         elif str(cEntry.getFromNodePath()) == "render/plane1/rwinner_plane1":
             self.plane1.rwi_hp-=1
+            self.bullet_hit.play()
             print("plane1 right inner wing hp = " + str(self.plane1.rwi_hp))
             if(self.plane1.rwi_hp<=0):
                 print("plane1 lost rwi!")
@@ -477,10 +513,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     self.plane1.model_rwo.remove()
                     self.plane1.has_rwo=False
                     print("and rwo!")
+                    render.clearLight(self.plane1.spotlightNP1)
                 
         #plane 2 right inner wing
         elif str(cEntry.getFromNodePath()) == "render/plane2/rwinner_plane2":
             self.plane2.rwi_hp-=1
+            self.bullet_hit.play()
             print("plane2 right inner wing hp = " + str(self.plane2.rwi_hp))
             if(self.plane2.rwi_hp<=0):
                 print("plane2 lost rwi!")
@@ -493,6 +531,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     self.plane2.model_rwo.remove()
                     self.plane2.has_rwo=False
                     print("and rwo!")
+                    render.clearLight(self.plane2.spotlightNP1)
         else:
             "what the f$%k did I hit!?!"
         
@@ -506,6 +545,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
         self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
         bullet.fire(vel,pos)
+        self.machinegun.play()
     
     def shootprep2(self):
         #vel doesnt work but will hold for filler right now
@@ -517,16 +557,39 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
         self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
         bullet.fire(vel,pos)
+        self.machinegun.play()
         
     def uiText(self,task):
         self.textObject.remove()
         throttle = Decimal(str(self.plane1.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
         self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
         return task.cont
-                
-                
-            
         
+        
+    def setupSounds(self):
+        self.explosion = base.loader.loadSfx("sounds/explosion1.wav")
+        
+        self.engine1 = base.loader.loadSfx("sounds/engine.wav")
+        self.engine2 = base.loader.loadSfx("sounds/engine.wav")
+        self.engine1.setVolume(0.7)
+        self.engine2.setVolume(0.7)
+        
+        self.engine_damaged1 = base.loader.loadSfx("sounds/engine_damaged.wav")
+        self.engine_damaged2 = base.loader.loadSfx("sounds/engine_damaged.wav")
+        self.engine_damaged1.setVolume(0.4)
+        self.engine_damaged2.setVolume(0.4)
+        
+        self.machinegun = base.loader.loadSfx("sounds/machinegun2.wav")
+        self.machinegun.setPlayRate(1.2)
+        self.machinegun.setVolume(0.3)
+        
+        self.bullet_hit = base.loader.loadSfx("sounds/bullets_hitting.wav")       
+        self.bullet_hit.setVolume(0.3)        
+        
+        self.engine1.setLoopCount(0)
+        self.engine2.setLoopCount(0)
+        self.engine1.play()
+        self.engine2.play()
         
 w = World()
 run()
