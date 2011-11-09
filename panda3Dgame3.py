@@ -336,7 +336,155 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 "what the f$%k did I hit!?!"
                 
     def bulletCollision(self,cEntry):
-        print(cEntry.getFromNodePath())
+        #plane 1 body
+        if str(cEntry.getFromNodePath())=="render/plane1/bodyfront_plane1" or str(cEntry.getFromNodePath())=="render/plane1/bodymid_plane1" or str(cEntry.getFromNodePath())=="render/plane1/bodyrear_plane1":
+            self.plane1.body_hp-=1
+            print("plane1 body hp = " + str(self.plane1.body_hp))
+            #check for game over
+            if(self.plane1.body_hp<=0):
+                print("plane1 dead!")
+                #remove whole plane
+                cEntry.getFromNodePath().getParent().remove()
+            
+        #plane 2 body
+        elif str(cEntry.getFromNodePath()) == "render/plane2/bodyfront_plane2" or str(cEntry.getFromNodePath())== "render/plane2/bodymid_plane2" or str(cEntry.getFromNodePath())== "render/plane2/bodyrear_plane2":
+            self.plane2.body_hp-=1
+            print("plane2 body hp = " + str(self.plane2.body_hp))
+            #check for game over
+            if(self.plane2.body_hp<=0):
+                print("plane2 dead!")
+                #remove whole plane
+                cEntry.getFromNodePath().getParent().remove()
+            
+        #plane 1 tail
+        elif str(cEntry.getFromNodePath()) == "render/plane1/tail_plane1":
+            self.plane1.tail_hp-=1
+            print("plane1 tail hp = " + str(self.plane1.tail_hp))
+            if(self.plane1.tail_hp<=0):
+                print("plane1 lost tail!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane1.model_tail.remove() #remove model
+                self.plane1.has_tail=False
+                
+        #plane2 tail
+        elif str(cEntry.getFromNodePath()) =="render/plane2/tail_plane2":
+            self.plane2.tail_hp-=1
+            print("plane2 tail hp = " + str(self.plane2.tail_hp))
+            if(self.plane2.tail_hp<=0):
+                print("plane2 lost tail!")
+                cEntry.getFromNodePath().remove() # remove cnode
+                self.plane2.model_tail.remove() #remove model
+                self.plane2.has_tail = False
+                
+        #plane1 left outer wing
+        elif str(cEntry.getFromNodePath()) == "render/plane1/lwouter_plane1":
+            self.plane1.lwo_hp-=1
+            print("plane1 left outer wing hp = " + str(self.plane1.lwo_hp))
+            if(self.plane1.lwo_hp<=0):
+                print("plane1 lost lwo!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane1.model_lwo.remove() #remove model
+                self.plane1.has_lwo= False 
+                render.clearLight(self.plane1.spotlightNP2)
+                
+        #plane2 left outer wing
+        elif str(cEntry.getFromNodePath()) =="render/plane2/lwouter_plane2":
+            self.plane2.lwo_hp-=1
+            print("plane2 left outer wing hp = " + str(self.plane2.lwo_hp))
+            if(self.plane2.lwo_hp<=0):
+                print("plane2 lost lwo!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane2.model_lwo.remove() #remove model
+                self.plane2.has_lwo = False
+                render.clearLight(self.plane2.spotlightNP2)
+                  
+        #plane1 right outer wing
+        elif str(cEntry.getFromNodePath()) =="render/plane1/rwouter_plane1":
+            self.plane1.rwo_hp-=1
+            print("plane1 right outer wing hp = " + str(self.plane1.rwo_hp))
+            if(self.plane1.rwo_hp<=0):
+                print("plane1 lost rwo!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane1.model_rwo.remove() #remove model
+                self.plane1.has_rwo = False
+                render.clearLight(self.plane1.spotlightNP1)
+                
+        #plane2 right outer wing
+        elif str(cEntry.getFromNodePath()) == "render/plane2/rwouter_plane2":
+            self.plane2.rwo_hp-=1
+            print("plane2 right outer wing hp = " + str(self.plane2.rwo_hp))
+            if(self.plane2.rwo_hp<=0):
+                print("plane2 lost rwo!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane2.model_rwo.remove() #remove model
+                self.plane2.has_rwo=False
+                render.clearLight(self.plane2.spotlightNP1)
+                
+        #plane1 left inner wing
+        elif str(cEntry.getFromNodePath()) == "render/plane1/lwinner_plane1":
+            self.plane1.lwi_hp -=1
+            print("plane1 left inner wing hp = " + str(self.plane1.lwi_hp))
+            if(self.plane1.lwi_hp<=0):
+                print("plane1 lost lwi!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane1.model_lwi.remove() #remove model
+                self.plane1.has_lwi=False
+                #remove lwo too if it still exists
+                if(self.plane1.has_lwo):
+                    self.plane1.lwouter_cNodePath.remove()
+                    self.plane1.model_lwo.remove()
+                    self.plane1.has_lwo=False
+                    print("and lwo!")
+                
+        #plane 2 left inner wing
+        elif str(cEntry.getFromNodePath()) == "render/plane2/lwinner_plane2":
+            self.plane2.lwi_hp-=1
+            print("plane2 left inner wing hp = " + str(self.plane1.lwi_hp))
+            if(self.plane2.lwi_hp<=0):
+                print("plane2 lost lwi!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane2.model_lwi.remove() #remove model
+                self.plane2.has_lwi=False
+                #remove lwo too if it still exists
+                if(self.plane2.has_lwo):
+                    self.plane2.lwouter_cNodePath.remove()
+                    self.plane2.model_lwo.remove()
+                    self.plane2.has_lwo=False
+                    print("and lwo!")
+                
+        #plane 1 right inner wing
+        elif str(cEntry.getFromNodePath()) == "render/plane1/rwinner_plane1":
+            self.plane1.rwi_hp-=1
+            print("plane1 right inner wing hp = " + str(self.plane1.rwi_hp))
+            if(self.plane1.rwi_hp<=0):
+                print("plane1 lost rwi!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane1.model_rwi.remove() #remove model
+                self.plane1.has_rwi=False
+                #remove rwo too if it still exists
+                if(self.plane1.has_rwo):
+                    self.plane1.rwouter_cNodePath.remove()
+                    self.plane1.model_rwo.remove()
+                    self.plane1.has_rwo=False
+                    print("and rwo!")
+                
+        #plane 2 right inner wing
+        elif str(cEntry.getFromNodePath()) == "render/plane2/rwinner_plane2":
+            self.plane2.rwi_hp-=1
+            print("plane2 right inner wing hp = " + str(self.plane2.rwi_hp))
+            if(self.plane2.rwi_hp<=0):
+                print("plane2 lost rwi!")
+                cEntry.getFromNodePath().remove() #remove cnode
+                self.plane2.model_rwi.remove() #remove model
+                self.plane2.has_rwi=False
+                #remove rwo too if it still exists
+                if(self.plane2.has_rwo):
+                    self.plane2.rwouter_cNodePath.remove()
+                    self.plane2.model_rwo.remove()
+                    self.plane2.has_rwo=False
+                    print("and rwo!")
+        else:
+            "what the f$%k did I hit!?!"
         
     def shootprep1(self):
         #vel doesnt work but will hold for filler right now
