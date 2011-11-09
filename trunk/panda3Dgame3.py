@@ -430,6 +430,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 cEntry.getFromNodePath().remove() #remove cnode
                 self.plane1.model_tail.remove() #remove model
                 self.plane1.has_tail=False
+                self.plane1.controlLimits["yaw"] = 0
+                self.plane1.controlLimits["pitch"] = 10
+                self.plane1.controlFactors["yaw"] = 10
                 
         #plane2 tail
         elif str(cEntry.getFromNodePath()) =="render/plane2/tail_plane2":
@@ -441,6 +444,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
                 cEntry.getFromNodePath().remove() # remove cnode
                 self.plane2.model_tail.remove() #remove model
                 self.plane2.has_tail = False
+                self.plane2.controlLimits["yaw"] = 0
+                self.plane2.controlLimits["pitch"] = 10
+                self.plane2.controlFactors["yaw"] = 10
                 
         #plane1 left outer wing
         elif str(cEntry.getFromNodePath()) == "render/plane1/lwouter_plane1":
