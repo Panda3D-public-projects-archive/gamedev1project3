@@ -19,7 +19,7 @@ class Bullet(DirectObject):
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
         #self.cNodePath.show()    
     
-    def fire(self, velocity, pos):
+    def fire(self, velocity, pos,hpr):
     #############################################################
     ## ATTENTION: if you get the error "global name 'Parabolaf' is
     ##not defined either a) pick up the latest release for fix or b)
@@ -28,5 +28,6 @@ class Bullet(DirectObject):
     #############################################################
     ############################################################
         print(" SHOOT")
-        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ=.3)
+        self.bullet.setHpr(hpr)
+        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, duration = 2)
         self.trajectory.start()
