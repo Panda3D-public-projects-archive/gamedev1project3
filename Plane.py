@@ -9,8 +9,8 @@ from Bullet import *
 #GLOBALS
 density = 5000
 bulletVelocity = -1000
-baseDrag = 1
-fullThrottleForce = 100000
+baseDrag = .1
+fullThrottleForce = 1
 gravityForce = 9.81
 
 controlFactors = {
@@ -24,7 +24,7 @@ gravity = NodePath(ForceNode("gravity"))
 gravity.reparentTo(render)
 gravity.node().addForce(LinearVectorForce(Vec3.down(), gravityForce))
 
-base.enableParticles()
+#base.enableParticles()
 
 class MyPlane(DirectObject):
     def __init__(self,camera,name):
@@ -34,12 +34,7 @@ class MyPlane(DirectObject):
         self.camera = camera
         
         #init physics
-        self.scaleNode = NodePath("ScaleNode")
-        self.scaleNode.reparentTo(render)
-        an = ActorNode(name)
-        self.plane = self.scaleNode.attachNewNode(an)
-        base.physicsMgr.attachPhysicalNode(an)
-        an.getPhysicsObject().setMass(1)
+        self.plane = render.attachNewNode(ActorNode(name))
         self.objMass = {
             "body":600,
             "tail":100,
@@ -80,7 +75,7 @@ class MyPlane(DirectObject):
         self.model2.setPos(0,40,-3)
         self.model2.reparentTo(self.plane)
         #self.model.reparentTo(self.plane)
-        self.scaleNode.setScale(.05)
+        self.plane.setScale(.05)
         self.plane.setH(180)
         
         #self.plane.reparentTo(render)
@@ -113,18 +108,19 @@ class MyPlane(DirectObject):
         
         #movement
         self.throttle = 1
-        self.forces = ForceNode("control_forces")
-        NodePath(self.forces).reparentTo(self.plane)
+        self.velocity = Vec3(0, 10, 0)
+        #self.forces = ForceNode("control_forces")
+        #NodePath(self.forces).reparentTo(self.plane)
         
-        self.throttleForce = LinearVectorForce(0, -1, 0, fullThrottleForce)
+        #self.throttleForce = LinearVectorForce(0, -1, 0, fullThrottleForce)
         #self.dragForce = LinearFrictionForce(baseDrag)
         #self.controlForce = AngularVectorForce(0, 0, 0)
         
-        self.forces.addForce(self.throttleForce)
+        #self.forces.addForce(self.throttleForce)
         #self.forces.addForce(self.dragForce)
         #self.forces.addForce(self.controlForce)
         
-        self.plane.node().getPhysical(0).addLinearForce(self.throttleForce)
+        #self.plane.node().getPhysical(0).addLinearForce(self.throttleForce)
         #self.plane.node().getPhysical(0).addLinearForce(self.dragForce)
         #self.plane.node().getPhysical(0).addAngularForce(self.controlForce)
         
@@ -215,8 +211,10 @@ class MyPlane(DirectObject):
         if self.throttle < 0:
             self.throttle = 0
         
+        #thrust = self.plane.get
         #Forward Movement
-        self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
+        #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
+        self.plane.setPos(self.velocity * elapsed + self.plane.getPos())
         
         #angle movement
         hpr = VBase3(self.controls["yaw"] * elapsed,
