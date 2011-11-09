@@ -196,13 +196,13 @@ class MyPlane(DirectObject):
         
         self.spotlightNP1 = self.plane.attachNewNode(self.spotlight1)
         self.spotlightNP1.setPos(VBase3(-33,0,20))
-        self.spotlightNP1.setHpr(180,0,0) 
+        self.spotlightNP1.setHpr(175,0,0) 
         self.spotlightNP1.setShaderAuto()
         self.spotlightNP1.setDepthOffset(1)
         
         self.spotlightNP2 = self.plane.attachNewNode(self.spotlight2)
         self.spotlightNP2.setPos(VBase3(33,0,20))
-        self.spotlightNP2.setHpr(180,0,0) 
+        self.spotlightNP2.setHpr(185,0,0) 
         self.spotlightNP2.setShaderAuto()
         self.spotlightNP2.setDepthOffset(1)       
         
