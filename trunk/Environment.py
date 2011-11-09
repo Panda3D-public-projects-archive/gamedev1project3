@@ -17,4 +17,4 @@ class Environment(DirectObject):
         self.envNode = self.model.find("**/coll_ground")
         self.envNode.reparentTo(self.dome)
         self.envNode.node().setFromCollideMask(BitMask32.allOff())
-        
+        self.dome.setScale(10)
