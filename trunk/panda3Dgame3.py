@@ -42,9 +42,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
         render.setShaderAuto() #you probably want to use this
         
         #input
-        self.keyMap = {"left":0, "right":0, "forward":0}
         self.accept("escape", sys.exit)
         
+        self.plane1.mapKeys("r", "f", "throttle")
+        self.plane1.mapKeys("s", "w", "pitch")
+        self.plane1.mapKeys("a", "d", "yaw")
+        self.plane1.mapKeys("q", "e", "roll")
+        '''
         self.accept("arrow_up", self.plane1.setKey, ["forward", 1])
         self.accept("arrow_right", self.plane1.setKey, ["right", 1])
         self.accept("arrow_left", self.plane1.setKey, ["left", 1])
@@ -57,6 +61,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("w-up", self.plane2.setKey, ["forward", 0])
         self.accept("d-up", self.plane2.setKey, ["right", 0])
         self.accept("a-up", self.plane2.setKey, ["left", 0])
+        '''
         
         #collision stuff
         self.accept("collide-tail_plane1", self.planeCollisions)
@@ -79,7 +84,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #projectile/guns stuff
         self.accept("/",self.shootprep1)
-        self.accept("q", self.shootprep2)
+        self.accept("space", self.shootprep2)
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
