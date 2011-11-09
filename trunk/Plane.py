@@ -100,11 +100,11 @@ class MyPlane(DirectObject):
 
         #hp levels for each piece of the plane
         self.body_hp= 50 #make it hard to blow up the body without making the player crash to the ground
-        self.lwo_hp=5
-        self.rwo_hp=5
-        self.lwi_hp=10
-        self.rwi_hp=10
-        self.tail_hp=12
+        self.lwo_hp=1
+        self.rwo_hp=1
+        self.lwi_hp=2
+        self.rwi_hp=2
+        self.tail_hp=1
 
         #booleans for inventory of remaining plane parts
         #don't need to include body because obviously if body is lost then you are dead
