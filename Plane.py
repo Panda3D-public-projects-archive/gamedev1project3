@@ -9,7 +9,7 @@ from Bullet import *
 #GLOBALS
 density = 5000
 bulletVelocity = -1000
-baseDrag = .01
+baseDrag = .1
 fullThrottleForce = 50
 gravityForce = Vec3(0, 0, -9.81)
 
