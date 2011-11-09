@@ -78,6 +78,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
         self.textObject.reparentTo(render2d)
         taskMgr.add(self.uiText, "uiTask")
+        #bullet list
+        self.bullets = []
         
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)
@@ -538,6 +540,12 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel doesnt work but will hold for filler right now
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
+        for i in self.bullets:
+            if i.bullet.getZ() <-9:
+                i.bullet.remove()
+                self.bullets.remove(i)
+                print("bullet removed")
+                
         if self.plane1.canFireRight or self.plane1.canFireLeft:
             vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * 100
             #print(vel)
@@ -545,6 +553,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
             bullet = Bullet()
             base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
             self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+            self.bullets.append(bullet)
             bullet.fire(vel,pos,self.plane1.plane.getHpr())
         self.machinegun.play()
     
