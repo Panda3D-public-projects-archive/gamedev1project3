@@ -14,6 +14,7 @@ from direct.gui.OnscreenText import OnscreenText
 from Plane import *
 from Environment import *
 from Bullet import *
+from collections import deque
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
@@ -88,7 +89,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #projectile/guns stuff
         self.accept("space",self.shootprep1)
-        self.accept("space", self.shootprep2)
+        self.accept("lalt", self.shootprep2)
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
@@ -101,7 +102,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         taskMgr.add(self.uiText, "uiTask")
         
         #bullet list
-        self.bullets = []
+        self.bullets = deque()
         
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)
@@ -557,13 +558,16 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     render.clearLight(self.plane2.spotlightNP1)
         else:
             "what the f$%k did I hit!?!"
+    
+    def clearBullet(self, task):
+        bullet = self.bullets.popleft()
+        base.cTrav.removeCollider(bullet.cNodePath)
+        self.cHandler.removeCollider(bullet.cNodePath)
+        del bullet.trajectory
+        print "removed"
+        return task.done
         
     def shootprep1(self):
-        for i in self.bullets:
-            if i.bullet.getZ()==-10:
-                i.bullet.remove()
-                self.bullets.remove(i)
-                #print("bullet removed")
         if self.plane1.fireRight: #right guns turn
             if self.plane1.canFireRight: #right gun still exists
                 pos = self.plane1.right_gun.getPos(render)
@@ -592,14 +596,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #print(pos)
         bullet.fire(vel,self.plane1.plane.getHpr())
         self.machinegun.play()
+        taskMgr.doMethodLater(5, self.clearBullet, 'clear_bullet')
     
     def shootprep2(self):
-        for i in self.bullets:
-            if i.bullet.getZ()==-10:
-                i.bullet.remove()
-                self.bullets.remove(i)
-                #print("bullet removed")
-                
         if self.plane2.fireRight: #right guns turn
             if self.plane2.canFireRight: #right gun still exists
                 pos = self.plane2.right_gun.getPos(render)
@@ -628,6 +627,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #print(pos)
         bullet.fire(vel,self.plane2.plane.getHpr())
         self.machinegun.play()
+        taskMgr.doMethodLater(5, self.clearBullet, 'clear_bullet')
         
     def uiText(self,task):
         self.textObject.remove()
@@ -636,7 +636,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #throttle2 = Decimal(str(self.plane2.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
         self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
         #self.textObject2 = OnscreenText(text=str(throttle2),pos = (-.5,.02), scale = .07)
-        return task.cont
+        return task.cont 
         
         
     def setupSounds(self):

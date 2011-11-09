@@ -7,11 +7,17 @@ from pandac.PandaModules import * #basic Panda modules
 from Bullet import *
 
 #GLOBALS
-density = 5000
 bulletVelocity = -1000
-baseDrag = .06
-gravityForce = Vec3(0, 0, -9.81)
-fullThrottleForce = 300
+baseDrag = .1
+fullThrottleForce = 250
+
+def maxVelocity():
+    #return (1-baseDrag) * fullThrottleForce / baseDrag
+    return 100
+
+gravityForce = Vec3(0, 0, -30)
+
+liftPower = (1, -1) #lift and angle
 
 #rate of change, per second, of the various controls
 controlFactors = {
@@ -82,9 +88,9 @@ class MyPlane(DirectObject):
         self.model_panda.reparentTo(self.plane)
         
         self.left_gun = self.plane.attachNewNode('left_gun')
-        self.left_gun.setPos(12,-8,-5)
+        self.left_gun.setPos(14,-22,-5)
         self.right_gun = self.plane.attachNewNode('right_gun')
-        self.right_gun.setPos(-12,-8,-5)
+        self.right_gun.setPos(-14,-22,-5)
         self.plane.setScale(.05)
         self.plane.setH(180)
         
@@ -119,21 +125,7 @@ class MyPlane(DirectObject):
         #movement
         self.throttle = 0
         self.velocity = Vec3(0, 0, 0)
-        self.rotation = Vec3(0, 0, 0)
-        #self.forces = ForceNode("control_forces")
-        #NodePath(self.forces).reparentTo(self.plane)
-        
-        #self.throttleForce = LinearVectorForce(0, -1, 0, fullThrottleForce)
-        #self.dragForce = LinearFrictionForce(baseDrag)
-        #self.controlForce = AngularVectorForce(0, 0, 0)
-        
-        #self.forces.addForce(self.throttleForce)
-        #self.forces.addForce(self.dragForce)
-        #self.forces.addForce(self.controlForce)
-        
-        #self.plane.node().getPhysical(0).addLinearForce(self.throttleForce)
-        #self.plane.node().getPhysical(0).addLinearForce(self.dragForce)
-        #self.plane.node().getPhysical(0).addAngularForce(self.controlForce)
+        self.rotation = Vec3(0, 0, 0) #the current rotational velocity
         
         #misc
         self.setupCollision()
@@ -145,8 +137,6 @@ class MyPlane(DirectObject):
         self.camera.setH(180)
         self.camera.setP(-10)
         
-        
-       
         
     def setupCollision(self):
         #set up collision
@@ -199,8 +189,8 @@ class MyPlane(DirectObject):
         
     def runControl(self, control, direction):
         self.controls[control] += (1 if direction == "up" else -1) * controlFactors[control]
-        print " ".join((control, direction))
-        print self.controls
+        #print " ".join((control, direction))
+        #print self.controls
         
         
     def mapKeys(self, forwardKey, backwardKey, control):
@@ -222,31 +212,43 @@ class MyPlane(DirectObject):
             self.throttle = 0
             
         for (i, axis) in enumerate(["yaw", "pitch", "roll"]):
-            self.rotation.addToCell(i, self.controls[axis] * elapsed)
+            self.rotation.addToCell(i, self.controls[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
             if self.rotation.getCell(i) > controlLimits[axis]:
                 self.rotation.setCell(i, controlLimits[axis])
             elif self.rotation.getCell(i) < -controlLimits[axis]:
                 self.rotation.setCell(i, -controlLimits[axis])
                 
             elif self.controls[axis] == 0 and self.rotation.getCell(i) > 0:
-                self.rotation.addToCell(i, -controlFactors[axis] * elapsed)
+                self.rotation.addToCell(i, -controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
                 if self.rotation.getCell(i) < 0:
                     self.rotation.setCell(i, 0)
             elif self.controls[axis] == 0 and self.rotation.getCell(i) < 0:
-                self.rotation.addToCell(i, controlFactors[axis] * elapsed)
+                self.rotation.addToCell(i, controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
                 if self.rotation.getCell(i) > 0:
                     self.rotation.setCell(i, 0)
                 
         
-        #acceleration & gravity
+        #acceleration
         thrust = self.plane.getQuat().getForward() * -1
         thrust.normalize()
         thrust *= ((self.throttle**2) * fullThrottleForce) #x^2 used here for more expressive throttling
         self.velocity += thrust * elapsed
-       #self.velocity += gravityForce * elapsed
+        
+        #lift from wings
+        #determine wing normal vector
+        normal = self.plane.getQuat().getUp()
+        #project velocity
+        normal = self.velocity.project(normal)
+        #length of this vector determines lift/drag
+        normal = normal.length()
+        self.velocity += liftPower[0] * elapsed * normal
+        self.rotation.addY(liftPower[1] * elapsed * normal)
         
         #air drag
         self.velocity *= (1 - baseDrag)
+        
+        #gravity
+        self.velocity += gravityForce * elapsed
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
