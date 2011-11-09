@@ -7,11 +7,12 @@ from pandac.PandaModules import * #basic Panda modules
 from direct.interval.IntervalGlobal import *
 
 class Bullet(DirectObject):
-    def __init__(self):
+    def __init__(self,startPos):
         self.bullet = render.attachNewNode(ActorNode("bullet"))
         self.model = loader.loadModel("models/bullet")
         self.model.reparentTo(self.bullet)
         self.bullet.setScale(.08)
+        self.startPos = startPos
        
         self.cNode = CollisionNode("bullet")
         self.cTube = CollisionTube(0,-1,0,0,1,0,.42)
@@ -19,7 +20,7 @@ class Bullet(DirectObject):
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
         #self.cNodePath.show()    
     
-    def fire(self, velocity, pos,hpr):
+    def fire(self, velocity,hpr):
     #############################################################
     ## ATTENTION: if you get the error "global name 'Parabolaf' is
     ##not defined either a) pick up the latest release for fix or b)
@@ -27,7 +28,8 @@ class Bullet(DirectObject):
     ##and rename Parabolaf with LParabola
     #############################################################
     ############################################################
-        print(" SHOOT")
+        #print(" SHOOT")
+        self.bullet.wrtReparentTo(render)
         self.bullet.setHpr(hpr)
-        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ = -10)
+        self.trajectory = ProjectileInterval(self.bullet,startPos=self.startPos,startVel=velocity, endZ = -10)
         self.trajectory.start()

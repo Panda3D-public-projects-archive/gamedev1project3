@@ -544,17 +544,37 @@ class World(DirectObject): #subclassing here is necessary to accept events
             if i.bullet.getZ() <-9:
                 i.bullet.remove()
                 self.bullets.remove(i)
-                print("bullet removed")
+                #print("bullet removed")
+        
+        bullet = Bullet(self.plane1.right_gun.getPos(render))
+        
+        # if self.plane1.fireRight: #right guns turn
+            # if self.plane1.canFireRight: #right gun still exists
+                # pos = self.plane1.right_gun.getPos(render)
+                # print(pos)
+                # self.plane1.fireRight = False
+            # elif self.plane1.canFireLeft:#no right gun, but left one
+                # self.plane1.fireRight = False 
+                # pos = self.plane1.left_gun.getPos()
+            # else:
+                # pass
+        # else: #left gun turn
+            # if self.plane1.canFireLeft: #left gun still exists
+                # pos = self.plane1.left_gun.getPos()
+                # self.plane1.fireRight = True
+            # elif self.plane1.canFireRight: #no left gun, but right one
+                # self.plane1.fireRight = True
+                # pos = self.plane1.right_gun.getPos()
+            # else:
+                # pass
+
                 
-        if self.plane1.canFireRight or self.plane1.canFireLeft:
-            vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * 100
-            #print(vel)
-            pos = self.plane1.plane.getPos()
-            bullet = Bullet()
-            base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
-            self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-            self.bullets.append(bullet)
-            bullet.fire(vel,pos,self.plane1.plane.getHpr())
+        vel= self.plane1.velocity + self.plane1.plane.getQuat().getForward() * -1 * 100
+        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+        self.bullets.append(bullet)
+        #print(pos)
+        bullet.fire(vel,self.plane1.plane.getHpr())
         self.machinegun.play()
     
     def shootprep2(self):

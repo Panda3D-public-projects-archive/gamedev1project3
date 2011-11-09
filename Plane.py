@@ -36,6 +36,7 @@ class MyPlane(DirectObject):
         self.camera = camera
         self.canFireLeft = True
         self.canFireRight = True
+        self.fireRight = False #false for left side, true for right
         
         #init physics
         self.plane = render.attachNewNode(ActorNode(name))
@@ -68,11 +69,22 @@ class MyPlane(DirectObject):
             self.model_lwi=loader.loadModel("models/left_wing")
             self.model_lwi.reparentTo(self.plane)
             
-        self.model2 = loader.loadModel("models/panda-model")
-        self.model2.setScale(.008)
-        self.model2.setPos(0,40,-3)
-        self.model2.reparentTo(self.plane)
+        #self.model2 = loader.loadModel("models/panda-model")
+        #self.model2.setScale(.008)
+        #self.model2.setPos(0,40,-3)
+        #self.model2.reparentTo(self.plane)
         #self.model.reparentTo(self.plane)
+        
+        self.model_panda = loader.loadModel("models/panda-model")
+        self.model_panda.setScale(.008)
+        self.model_panda.setPos(5,0,0)
+        self.model_panda.reparentTo(self.plane)
+        
+        self.left_gun = self.plane.attachNewNode('left_gun')
+        print(self.left_gun)
+        self.left_gun.setPos(2,0,0)
+        self.right_gun = self.plane.attachNewNode('right_gun')
+        self.right_gun.setPos(-2,0,0)
         self.plane.setScale(.05)
         self.plane.setH(180)
         
