@@ -17,7 +17,7 @@ def maxVelocity():
 
 gravityForce = Vec3(0, 0, -30)
 
-liftPower = (2, -3) #lift and angle
+liftPower = (1, -1) #lift and angle
 
 #rate of change, per second, of the various controls
 controlFactors = {
@@ -82,10 +82,10 @@ class MyPlane(DirectObject):
         #self.model2.reparentTo(self.plane)
         #self.model.reparentTo(self.plane)
         
-        self.model_panda = loader.loadModel("models/panda-model")
-        self.model_panda.setScale(.008)
-        self.model_panda.setPos(5,0,0)
-        self.model_panda.reparentTo(self.plane)
+        #self.model_panda = loader.loadModel("models/panda-model")
+        #self.model_panda.setScale(.008)
+        #self.model_panda.setPos(5,0,0)
+        #self.model_panda.reparentTo(self.plane)
         
         self.left_gun = self.plane.attachNewNode('left_gun')
         self.left_gun.setPos(14,-22,-5)
@@ -137,6 +137,13 @@ class MyPlane(DirectObject):
         self.camera.setH(180)
         self.camera.setP(-10)
         
+    def resetControls(self):
+        self.controls = {
+            "throttle":0,
+            "pitch":0,
+            "yaw":0,
+            "roll":0
+        }
         
     def setupCollision(self):
         #set up collision
@@ -187,10 +194,12 @@ class MyPlane(DirectObject):
         self.bodyrear_cNodePath = self.plane.attachNewNode(self.bodyrear_cNode)
         #self.bodyrear_cNodePath.show()
         
+        self.accept("backspace", self.resetControls)
+        
     def runControl(self, control, direction):
         self.controls[control] += (1 if direction == "up" else -1) * controlFactors[control]
-        #print " ".join((control, direction))
-        #print self.controls
+        print " ".join((control, direction))
+        print self.controls
         
         
     def mapKeys(self, forwardKey, backwardKey, control):
@@ -248,7 +257,7 @@ class MyPlane(DirectObject):
         self.velocity *= (1 - baseDrag)
         
         #gravity
-        self.velocity += gravityForce * elapsed
+        #self.velocity += gravityForce * elapsed
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)

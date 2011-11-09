@@ -18,7 +18,7 @@ class Bullet(DirectObject):
         self.cTube = CollisionTube(0,-1,0,0,1,0, 5)
         self.cNode.addSolid(self.cTube)
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
-        #self.cNodePath.show()
+        self.cNodePath.show()
         
     
     def fire(self, velocity,hpr):
