@@ -12,12 +12,19 @@ class Bullet(DirectObject):
         self.model = loader.loadModel("models/bullet")
         self.model.reparentTo(self.bullet)
         self.bullet.setScale(.08)
+        self.cHandler = PhysicsCollisionHandler()
+        self.cHandler.setInPattern("bullet")
         
         self.cNode = CollisionNode("bullet")
         self.cTube = CollisionTube(0,-1,0,0,1,0,.42)
         self.cNode.addSolid(self.cTube)
         self.cNodePath = self.bullet.attachNewNode(self.cNode)
         self.cNodePath.show()
+        
+        base.cTrav.addCollider(self.cNodePath, self.cHandler)
+        self.cHandler.addCollider(self.cNodePath, self.bullet)
+        
+        self.accept("bullet", self.collide)
         
     
     def fire(self, velocity, pos):
@@ -31,3 +38,6 @@ class Bullet(DirectObject):
         print(" SHOOT")
         self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ=0)
         self.trajectory.start()
+    
+    def collide(self,cEntry):
+        print(cEntry.getFromNodePath())
