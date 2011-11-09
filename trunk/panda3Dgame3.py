@@ -30,17 +30,17 @@ class World(DirectObject): #subclassing here is necessary to accept events
         wp.setTitle('player 2')
         w2.requestProperties(wp)
         self.dr = w2.makeDisplayRegion()
-        #self.dr.setSort(20)
+        self.dr.setSort(20)
         self.myCamera2d = NodePath(Camera('myCam2d'))
         self.dr.setCamera(self.myCamera2d)
-        # lens = OrthographicLens()
-        # lens.setFilmSize(2,2)
-        # lens.setNearFar(-1000,1000)
-        # self.myCamera2d.node().setLens(lens)
+        lens = OrthographicLens()
+        lens.setFilmSize(2,2)
+        lens.setNearFar(-1000,1000)
+        self.myCamera2d.node().setLens(lens)
         
         self.myRender2d = NodePath('myRender2d')
-        #self.myRender2d.setDepthTest(False)
-        #self.myRender2d.setDepthWrite(False)
+        self.myRender2d.setDepthTest(False)
+        self.myRender2d.setDepthWrite(False)
         self.myCamera2d.reparentTo(self.myRender2d)
         
         
@@ -559,21 +559,15 @@ class World(DirectObject): #subclassing here is necessary to accept events
             "what the f$%k did I hit!?!"
         
     def shootprep1(self):
-        #vel doesnt work but will hold for filler right now
-        #vel = self.plane.node().getPhysicsObject().getVelocity()
-        #vel+= vel.normalize() * bulletVelocity
         for i in self.bullets:
             if i.bullet.getZ()==-10:
                 i.bullet.remove()
                 self.bullets.remove(i)
                 #print("bullet removed")
-        
-        
-        
         if self.plane1.fireRight: #right guns turn
             if self.plane1.canFireRight: #right gun still exists
                 pos = self.plane1.right_gun.getPos(render)
-                print(pos)
+                #print(pos)
                 self.plane1.fireRight = False
             elif self.plane1.canFireLeft:#no right gun, but left one
                 self.plane1.fireRight = False 
@@ -600,17 +594,39 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.machinegun.play()
     
     def shootprep2(self):
-        #vel doesnt work but will hold for filler right now
-        #vel = self.plane.node().getPhysicsObject().getVelocity()
-        #vel+= vel.normalize() * bulletVelocity
-        if self.plane2.canFireRight or self.plane2.canFireLeft:
-            vel= self.plane2.velocity + self.plane2.plane.getQuat().getForward() * -1 * 100
-            #print(vel)
-            pos = self.plane1.plane.getPos()
-            bullet = Bullet()
-            base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
-            self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-            bullet.fire(vel,pos,self.plane2.plane.getHpr())
+        for i in self.bullets:
+            if i.bullet.getZ()==-10:
+                i.bullet.remove()
+                self.bullets.remove(i)
+                #print("bullet removed")
+                
+        if self.plane2.fireRight: #right guns turn
+            if self.plane2.canFireRight: #right gun still exists
+                pos = self.plane2.right_gun.getPos(render)
+                #print(pos)
+                self.plane2.fireRight = False
+            elif self.plane2.canFireLeft:#no right gun, but left one
+                self.plane2.fireRight = False 
+                pos = self.plane2.left_gun.getPos(render)
+            else:
+                pass
+        else: #left gun turn
+            if self.plane2.canFireLeft: #left gun still exists
+                pos = self.plane2.left_gun.getPos(render)
+                self.plane2.fireRight = True
+            elif self.plane2.canFireRight: #no left gun, but right one
+                self.plane2.fireRight = True
+                pos = self.plane2.right_gun.getPos(render)
+            else:
+                pass
+                
+        bullet = Bullet(pos)        
+        vel= self.plane2.velocity + self.plane2.plane.getQuat().getForward() * -1 * 100
+        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+        self.bullets.append(bullet)
+        #print(pos)
+        bullet.fire(vel,self.plane2.plane.getHpr())
         self.machinegun.play()
         
     def uiText(self,task):
