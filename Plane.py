@@ -4,22 +4,27 @@ from direct.task import Task
 import sys, math, random
 from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
-from direct.interval.IntervalGlobal import *
 from Bullet import *
 
+#GLOBALS
 density = 5000
 bulletVelocity = -1000
+baseDrag = 1
+fullThrottleForce = 5000
+gravityForce = 9.81
 
-class PlanePart(DirectObject):
-    def __init__(self, name, hp, model, parent, sphereData):
-        self.hp = hp
-        self.max_hp = hp
-        
-        #collision model
-        collision = CollisionSphere(*sphereData)
-        self.collisionNode = CollisionNode(name + "_collision")
-        self.collisionNode.addSolid(collision)
-        self.collisionNode.reparentTo(parent)
+controlFactors = {
+    "throttle":1,
+    "pitch":100,
+    "yaw":100,
+    "roll":100
+}
+
+gravity = NodePath(ForceNode("gravity"))
+gravity.reparentTo(render)
+gravity.node().addForce(LinearVectorForce(Vec3.down(), gravityForce))
+
+base.enableParticles()
 
 class MyPlane(DirectObject):
     def __init__(self,camera,name):
@@ -27,7 +32,21 @@ class MyPlane(DirectObject):
         self.name = name
         self.np = None
         self.camera = camera
-        self.plane = render.attachNewNode(ActorNode(name))
+        
+        #init physics
+        self.scaleNode = NodePath("ScaleNode")
+        self.scaleNode.reparentTo(render)
+        an = ActorNode(name)
+        self.plane = self.scaleNode.attachNewNode(an)
+        base.physicsMgr.attachPhysicalNode(an)
+        an.getPhysicsObject().setMass(1)
+        self.objMass = {
+            "body":600,
+            "tail":100,
+            "outer":75,
+            "inner":75
+        }
+        
         #self.model = loader.loadModel("models/mig-3")
         if self.name =="plane1":
             self.model_body = loader.loadModel("models/body_w")
@@ -61,13 +80,12 @@ class MyPlane(DirectObject):
         self.model2.setPos(0,40,-3)
         self.model2.reparentTo(self.plane)
         #self.model.reparentTo(self.plane)
-        self.plane.setScale(.05)
+        self.scaleNode.setScale(.05)
         self.plane.setH(180)
+        
         #self.plane.reparentTo(render)
         taskMgr.add(self.move, "moveTask")
-        self.keyMap = {"left":0, "right":0, "forward":0}
         self.prevtime = 0
-        self.isMoving = False  
 
         #hp levels for each piece of the plane
         self.body_hp= 50 #make it hard to blow up the body without making the player crash to the ground
@@ -84,7 +102,33 @@ class MyPlane(DirectObject):
         self.has_lwi=True
         self.has_rwo=True
         self.has_rwi=True
-            
+        
+        #controls
+        self.controls = {
+            "throttle":0,
+            "pitch":0,
+            "yaw":0,
+            "roll":0
+        }
+        
+        #movement
+        self.throttle = 1
+        self.forces = ForceNode("control_forces")
+        NodePath(self.forces).reparentTo(self.plane)
+        
+        self.throttleForce = LinearVectorForce(0, -1, 0, fullThrottleForce)
+        #self.dragForce = LinearFrictionForce(baseDrag)
+        #self.controlForce = AngularVectorForce(0, 0, 0)
+        
+        self.forces.addForce(self.throttleForce)
+        #self.forces.addForce(self.dragForce)
+        #self.forces.addForce(self.controlForce)
+        
+        self.plane.node().getPhysical(0).addLinearForce(self.throttleForce)
+        #self.plane.node().getPhysical(0).addLinearForce(self.dragForce)
+        #self.plane.node().getPhysical(0).addAngularForce(self.controlForce)
+        
+        #misc
         self.setupCollision()
         self.setupLights()
         
@@ -146,29 +190,49 @@ class MyPlane(DirectObject):
         self.bodyrear_cNode.addSolid(self.bodyrear_cSphere)
         self.bodyrear_cNodePath = self.plane.attachNewNode(self.bodyrear_cNode)
         #self.bodyrear_cNodePath.show()
-    
-    def setKey(self,key,value):
-        self.keyMap[key] = value
-    
+        
+    def runControl(self, control, direction):
+        self.controls[control] += (1 if direction == "up" else -1) * controlFactors[control]
+        print " ".join((control, direction))
+        print self.controls
+        
+        
+    def mapKeys(self, forwardKey, backwardKey, control):
+        self.accept(forwardKey, self.runControl, [control, "up"])
+        self.accept(forwardKey + "-up", self.runControl, [control, "down"])
+        self.accept(backwardKey, self.runControl, [control, "down"])
+        self.accept(backwardKey + "-up", self.runControl, [control, "up"])
+        
     def move(self, task):
         elapsed = task.time - self.prevtime
-        #self.camera.lookAt(self.plane)
-        if self.keyMap["left"]:
-            self.plane.setH(self.plane.getH() + elapsed * 100)
-        if self.keyMap["right"]:
-            self.plane.setH(self.plane.getH() - elapsed * 100)
-        if self.keyMap["forward"]:
-            dist = 8 * elapsed
-            angle = deg2Rad(self.plane.getH())
-            dx = dist * math.sin(angle)
-            dy = dist * -math.cos(angle)
-            self.plane.setPos(self.plane.getX() + dx, self.plane.getY() + dy, self.plane.getZ())
+        #update controls
+        
+        #THROTTLE
+        #throttle takes 1 full second to go from full to stop
+        self.throttle += self.controls["throttle"] * elapsed
+        if self.throttle > 1:
+            self.throttle = 1
+        if self.throttle < 0:
+            self.throttle = 0
+        
+        #Forward Movement
+        self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
+        hpr = self.plane.getHpr()
+        #self.plane.node().getPhysicsObject().setRotation(LRotationf(self.controls["yaw"], self.controls["pitch"], self.controls["roll"]))
+        hpr.setX(hpr.getX() + self.controls["yaw"] * elapsed)
+        hpr.setY(hpr.getY() + self.controls["pitch"] * elapsed)
+        hpr.setZ(hpr.getZ() + self.controls["roll"] * elapsed)
+        self.plane.setHpr(hpr)
         
         self.prevtime = task.time
+        
         return Task.cont
-
         
     def setupLights(self):
+        #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
+        #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
+        #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
+        #self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
         
         
         self.spotlight1 = Spotlight('spotlight1') 
