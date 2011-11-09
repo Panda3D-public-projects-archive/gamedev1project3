@@ -22,7 +22,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.disableMouse()
         
         #set up for split screen
-        #first window (default window)
         wp = WindowProperties()
         wp.setTitle('player 1')
         base.win.requestProperties(wp)
@@ -49,7 +48,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.camList[0].setPosHpr(0,-15,7,0,-15,0)
         #set camera 2
         base.camList[1].setPosHpr(0,-15,7,0,-15,0)
-        
+
         self.loadModels()
         self.setupLights()
         self.setupSounds()
