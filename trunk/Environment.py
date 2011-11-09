@@ -12,3 +12,4 @@ class Environment(DirectObject):
         self.dome = loader.loadModel("models/environment")
         self.dome.reparentTo(render)
         
+        
