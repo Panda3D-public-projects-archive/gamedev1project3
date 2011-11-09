@@ -21,10 +21,11 @@ class Environment(DirectObject):
         
         #bounding dome
         self.dome_model = loader.loadModel("models/dome_again")
-        self.dome_model.setScale(10)
+        self.dome_model.setScale(6)
+        self.dome_model.setPos(80,0,-20)
         self.dome_model.reparentTo(render)
         self.domeNode = CollisionNode("dome")
-        self.dome = CollisionInvSphere(0,0,0,200)
+        self.dome = CollisionInvSphere(0,0,0,150)
         self.domeNode.addSolid(self.dome)
         self.domeNodePath = self.env.attachNewNode(self.domeNode)
         self.domeNodePath.node().setFromCollideMask(BitMask32.allOff())
