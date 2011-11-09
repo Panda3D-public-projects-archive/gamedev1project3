@@ -74,9 +74,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("collide-lwinner_plane2", self.planeCollisions)
         self.accept("collide-rwinner_plane2", self.planeCollisions)
         
+        
         #projectile/guns stuff
         self.accept("q",self.plane2.shoot)
         self.accept("/", self.plane1.shoot)
+        
         
         
         
@@ -84,6 +86,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         """loads models into the world and set's their collision bodies"""
         #basic collision setup
         base.cTrav = CollisionTraverser()
+        base.cTrav.setRespectPrevTransform(True) #rapidly moving objects collision - for bullets
         self.cHandler = PhysicsCollisionHandler()
         self.cHandler.setInPattern("collide-%in")
         
@@ -330,7 +333,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
                         print("and rwo!")
             else:
                 "what the f$%k did I hit!?!"
-                
                 
                 
             
