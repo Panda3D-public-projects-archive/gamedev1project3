@@ -10,6 +10,7 @@ from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
 from Plane import *
+from Environment import *
 
 
 class World(DirectObject): #subclassing here is necessary to accept events
@@ -87,13 +88,14 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.cHandler.setInPattern("collide-%in")
         
         #environment
-        self.env = loader.loadModel("models/environment")
-        self.env.reparentTo(render)
-        self.env.setScale(.25)
-        self.env.setPos(-8, 42, 0)   
+        # self.env = loader.loadModel("models/environment")
+        # self.env.reparentTo(render)
+        # self.env.setScale(.25)
+        # self.env.setPos(-8, 42, 0)  
+        self.env = Environment()
         
         #player 1 plane
-        self.plane1 = Plane(base.camList[0],"plane1")
+        self.plane1 = MyPlane(base.camList[0],"plane1")
         self.plane1.plane.setPos(5,0,0)
         #add pieces for collisions
         #tail
@@ -120,7 +122,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.cHandler.addCollider(self.plane1.bodyrear_cNodePath, self.plane1.plane)
         
         #player 2 plane
-        self.plane2 = Plane(base.camList[1], "plane2")
+        self.plane2 = MyPlane(base.camList[1], "plane2")
         self.plane2.plane.setPos(20,0,0)
         #add pieces for collisions
         #tail
