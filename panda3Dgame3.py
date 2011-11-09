@@ -9,6 +9,7 @@ from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
+from direct.gui.OnscreenText import OnscreenText
 from Plane import *
 from Environment import *
 from Bullet import *
@@ -17,6 +18,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
         #turn off mouse control, otherwise camera is not repositionable
         base.disableMouse()
+        
+        
+        
         
         #set up for split screen
         #first window (default window)
@@ -85,6 +89,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)
         """loads models into the world and set's their collision bodies"""
+        
         #basic collision setup
         base.cTrav = CollisionTraverser()
         base.cTrav.setRespectPrevTransform(True) #rapidly moving objects collision - for bullets
@@ -97,6 +102,13 @@ class World(DirectObject): #subclassing here is necessary to accept events
         # self.env.setScale(.25)
         # self.env.setPos(-8, 42, 0)  
         self.env = Environment()
+        #envNode = self.env.colDome.find("**/environment")
+        # envNode = self.env.colDome
+        # base.cTrav.addCollider(envNode,self.cHandler)
+        # self.cHandler.addCollider(envNode,self.env.dome)
+        #for x in range(self.env.colDome.getNumChildren()):
+            #for y in range(self.env.colDome.getChild(x).getNumNodes()):
+                #print self.env.colDome.getChild(x).getNode(y)
         
         #player 1 plane
         self.plane1 = MyPlane(base.camList[0],"plane1")
@@ -151,6 +163,10 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.cHandler.addCollider(self.plane2.bodymid_cNodePath, self.plane2.plane)
         base.cTrav.addCollider(self.plane2.bodyrear_cNodePath, self.cHandler)
         self.cHandler.addCollider(self.plane2.bodyrear_cNodePath, self.plane2.plane)
+        
+        #ui text
+        textObject = OnscreenText(text=self.plane1.throttle, pos = (-.5,.02), scale=.07)
+        textObject.reparentTo(render2d)
         
         
         
