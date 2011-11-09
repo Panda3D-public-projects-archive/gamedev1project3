@@ -15,7 +15,7 @@ def maxVelocity():
     #return (1-baseDrag) * fullThrottleForce / baseDrag
     return 100
 
-gravityForce = Vec3(0, 0, -0)
+gravityForce = Vec3(0, 0, -30)
 
 liftPower = (1, -1) #lift and angle
 
@@ -123,7 +123,7 @@ class MyPlane(DirectObject):
         }
         
         #movement
-        self.throttle = 0
+        self.throttle = .5
         self.velocity = Vec3(0, 0, 0)
         self.rotation = Vec3(0, 0, 0) #the current rotational velocity
         
