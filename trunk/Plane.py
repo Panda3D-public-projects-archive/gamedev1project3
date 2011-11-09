@@ -20,7 +20,7 @@ class PlanePart(DirectObject):
         self.collisionNode.addSolid(collision)
         self.collisionNode.reparentTo(parent)
 
-class Plane(DirectObject):
+class MyPlane(DirectObject):
     def __init__(self,camera,name):
         #load model
         self.name = name
@@ -78,6 +78,12 @@ class Plane(DirectObject):
             
         self.setupCollision()
         self.setupLights()
+        
+        #camera on tail
+        self.camera.reparentTo(self.plane)
+        self.camera.setPos(0,120,60)
+        self.camera.setH(180)
+        self.camera.setP(-10)
        
         
     def setupCollision(self):
@@ -134,7 +140,7 @@ class Plane(DirectObject):
     
     def move(self, task):
         elapsed = task.time - self.prevtime
-        self.camera.lookAt(self.plane)
+        #self.camera.lookAt(self.plane)
         if self.keyMap["left"]:
             self.plane.setH(self.plane.getH() + elapsed * 100)
         if self.keyMap["right"]:
