@@ -10,14 +10,20 @@ from Bullet import *
 density = 5000
 bulletVelocity = -1000
 baseDrag = .1
-fullThrottleForce = 50
 gravityForce = Vec3(0, 0, -9.81)
+fullThrottleForce = 100
 
 controlFactors = {
     "throttle":1,
     "pitch":100,
-    "yaw":100,
+    "yaw":40,
     "roll":100
+}
+
+controlLimits = {
+    "pitch":70,
+    "yaw":30,
+    "roll":50
 }
 
 #base.enableParticles()
@@ -33,12 +39,6 @@ class MyPlane(DirectObject):
         
         #init physics
         self.plane = render.attachNewNode(ActorNode(name))
-        self.objMass = {
-            "body":600,
-            "tail":100,
-            "outer":75,
-            "inner":75
-        }
         
         #self.model = loader.loadModel("models/mig-3")
         if self.name =="plane1":
@@ -107,6 +107,7 @@ class MyPlane(DirectObject):
         #movement
         self.throttle = 0
         self.velocity = Vec3(0, 0, 0)
+        self.rotation = Vec3(0, 0, 0)
         #self.forces = ForceNode("control_forces")
         #NodePath(self.forces).reparentTo(self.plane)
         
@@ -207,11 +208,28 @@ class MyPlane(DirectObject):
             self.throttle = 1
         if self.throttle < 0:
             self.throttle = 0
+            
+        for (i, axis) in enumerate(["yaw", "pitch", "roll"]):
+            self.rotation.addToCell(i, self.controls[axis] * elapsed)
+            if self.rotation.getCell(i) > controlLimits[axis]:
+                self.rotation.setCell(i, controlLimits[axis])
+            elif self.rotation.getCell(i) < -controlLimits[axis]:
+                self.rotation.setCell(i, -controlLimits[axis])
+                
+            elif self.controls[axis] == 0 and self.rotation.getCell(i) > 0:
+                self.rotation.addToCell(i, -controlFactors[axis] * elapsed)
+                if self.rotation.getCell(i) < 0:
+                    self.rotation.setCell(i, 0)
+            elif self.controls[axis] == 0 and self.rotation.getCell(i) < 0:
+                self.rotation.addToCell(i, controlFactors[axis] * elapsed)
+                if self.rotation.getCell(i) > 0:
+                    self.rotation.setCell(i, 0)
+                
         
         #acceleration & gravity
         thrust = self.plane.getQuat().getForward() * -1
         thrust.normalize()
-        thrust *= (math.sqrt(self.throttle) * fullThrottleForce) #sqrt used here for more expressive throttling
+        thrust *= ((self.throttle**2) * fullThrottleForce) #x^2 used here for more expressive throttling
         self.velocity += thrust * elapsed
        #self.velocity += gravityForce * elapsed
         
@@ -220,15 +238,10 @@ class MyPlane(DirectObject):
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
-        self.velocity *= (1 - baseDrag)
         self.plane.setPos(self.velocity * elapsed + self.plane.getPos())
         
         #angle movement
-        hpr = VBase3(self.controls["yaw"] * elapsed,
-                     self.controls["pitch"] * elapsed,
-                     self.controls["roll"] * elapsed)
-        
-        self.plane.setHpr(self.plane, hpr)
+        self.plane.setHpr(self.plane, self.rotation * elapsed)
         self.prevtime = task.time            
         
         return Task.cont
