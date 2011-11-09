@@ -5,6 +5,7 @@ import sys, math, random
 from direct.interval.IntervalGlobal import * #for compound intervals
 from pandac.PandaModules import * #basic Panda modules
 from direct.interval.IntervalGlobal import *
+from Bullet import *
 
 density = 5000
 bulletVelocity = -1000
@@ -163,22 +164,15 @@ class MyPlane(DirectObject):
     ##and rename Parabolaf with LParabola
     #############################################################
     ############################################################
-        print(self.name + " SHOOT")
-        bullet = loader.loadModel("smiley")
-        bullet.setScale(1)
-        bullet.reparentTo(render)
-        bullet.setPos(self.plane.getPos())
-        bullet.setHpr(self.plane.getHpr())
-        velocity= self.plane.node().getPhysicsObject().getVelocity()
-        #velocity += (velocity.normalize() * bulletVelocity)
-        trajectory = ProjectileInterval(bullet, startPos = Point3(bullet.getPos()),duration = 1, startVel=velocity)
-        print(velocity)
-        trajectory.start()
+        #vel doesnt work but will hold for filler right now
+        #vel = self.plane.node().getPhysicsObject().getVelocity()
+        #vel+= vel.normalize() * bulletVelocity
+        vel= Vec3(0,10,0)
+        pos = Point3(self.plane.getX(), self.plane.getY(), self.plane.getZ()+15)
+        bullet = Bullet()
+        bullet.fire(vel,pos)
         
     def setupLights(self):
-    
-    
-    
         #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
         #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
         #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
