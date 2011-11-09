@@ -89,7 +89,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #projectile/guns stuff
         self.accept("space",self.shootprep1)
-        self.accept("lalt", self.shootprep2)
+        self.accept("alt", self.shootprep2)
         
         #bullet collisions
         self.accept("collide-bullet", self.bulletCollision)
