@@ -29,6 +29,20 @@ class World(DirectObject): #subclassing here is necessary to accept events
         w2 = base.openWindow()
         wp.setTitle('player 2')
         w2.requestProperties(wp)
+        self.dr = w2.makeDisplayRegion()
+        #self.dr.setSort(20)
+        self.myCamera2d = NodePath(Camera('myCam2d'))
+        self.dr.setCamera(self.myCamera2d)
+        # lens = OrthographicLens()
+        # lens.setFilmSize(2,2)
+        # lens.setNearFar(-1000,1000)
+        # self.myCamera2d.node().setLens(lens)
+        
+        self.myRender2d = NodePath('myRender2d')
+        #self.myRender2d.setDepthTest(False)
+        #self.myRender2d.setDepthWrite(False)
+        self.myCamera2d.reparentTo(self.myRender2d)
+        
         
         #set camera 1
         base.camList[0].setPosHpr(0,-15,7,0,-15,0)
@@ -81,8 +95,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         #ui task
         self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
+        self.textObject2 = OnscreenText(text = str(self.plane2.throttle),pos=(0,0),scale=1)
         self.textObject.reparentTo(render2d)
+        self.textObject2.reparentTo(self.myRender2d)
         taskMgr.add(self.uiText, "uiTask")
+        
         #bullet list
         self.bullets = []
         
@@ -598,8 +615,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
     def uiText(self,task):
         self.textObject.remove()
+        self.textObject2.remove()
         throttle = Decimal(str(self.plane1.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
+        throttle2 = Decimal(str(self.plane2.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
         self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
+        self.textObject2 = OnscreenText(text=str(throttle2),pos = (-.5,.02), scale = .07)
         return task.cont
         
         
