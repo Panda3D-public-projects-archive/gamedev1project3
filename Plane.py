@@ -10,7 +10,7 @@ from Bullet import *
 density = 5000
 bulletVelocity = -1000
 baseDrag = 1
-fullThrottleForce = 5000
+fullThrottleForce = 100000
 gravityForce = 9.81
 
 controlFactors = {
@@ -217,14 +217,14 @@ class MyPlane(DirectObject):
         
         #Forward Movement
         self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
-        hpr = self.plane.getHpr()
-        #self.plane.node().getPhysicsObject().setRotation(LRotationf(self.controls["yaw"], self.controls["pitch"], self.controls["roll"]))
-        hpr.setX(hpr.getX() + self.controls["yaw"] * elapsed)
-        hpr.setY(hpr.getY() + self.controls["pitch"] * elapsed)
-        hpr.setZ(hpr.getZ() + self.controls["roll"] * elapsed)
-        self.plane.setHpr(hpr)
         
-        self.prevtime = task.time
+        #angle movement
+        hpr = VBase3(self.controls["yaw"] * elapsed,
+                     self.controls["pitch"] * elapsed,
+                     self.controls["roll"] * elapsed)
+        
+        self.plane.setHpr(self.plane, hpr)
+        self.prevtime = task.time            
         
         return Task.cont
         
