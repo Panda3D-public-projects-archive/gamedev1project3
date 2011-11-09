@@ -174,20 +174,47 @@ class MyPlane(DirectObject):
         
     def setupLights(self):
         
-        lens = PerspectiveLens()
-        spotlight = Spotlight('spotlight') 
-        spotlight.setColor((.5,.5,.5,1)) 
-        spotlight.setLens(PerspectiveLens()) 
-        spotlight.getLens().setFov(15,15) 
-        spotlight.getLens().setNearFar(20,20) 
-        spotlight.setExponent(45)
+        
+        self.spotlight1 = Spotlight('spotlight1') 
+        self.spotlight1.setColor((.5,.5,.5,1)) 
+        self.spotlight1.setLens(PerspectiveLens()) 
+        self.spotlight1.getLens().setFov(15,15) 
+        self.spotlight1.getLens().setNearFar(20,20) 
+        self.spotlight1.setExponent(45)
+        
+        self.spotlight2 = Spotlight('spotlight2') 
+        self.spotlight2.setColor((.5,.5,.5,1)) 
+        self.spotlight2.setLens(PerspectiveLens()) 
+        self.spotlight2.getLens().setFov(15,15) 
+        self.spotlight2.getLens().setNearFar(20,20) 
+        self.spotlight2.setExponent(45)
+        
+        self.pointlight = PointLight('pointlight')
+        self.pointlight.setColor((.15,.15,.15,1))
+        
 
-        spotlightNP = self.plane.attachNewNode(spotlight)
-        spotlightNP.setPos(VBase3(0,0,20))
-        spotlightNP.setHpr(180,0,0) 
-        spotlightNP.setShaderAuto()
-        spotlightNP.setDepthOffset(1)
+        
+        self.spotlightNP1 = self.plane.attachNewNode(self.spotlight1)
+        self.spotlightNP1.setPos(VBase3(-33,0,20))
+        self.spotlightNP1.setHpr(180,0,0) 
+        self.spotlightNP1.setShaderAuto()
+        self.spotlightNP1.setDepthOffset(1)
+        
+        self.spotlightNP2 = self.plane.attachNewNode(self.spotlight2)
+        self.spotlightNP2.setPos(VBase3(33,0,20))
+        self.spotlightNP2.setHpr(180,0,0) 
+        self.spotlightNP2.setShaderAuto()
+        self.spotlightNP2.setDepthOffset(1)       
+        
+        self.pointlightNP = self.plane.attachNewNode(self.pointlight)
+        self.pointlightNP.setPos(VBase3(0,0,20))
+        self.pointlightNP.setHpr(180,0,0)
+        self.pointlightNP.setShaderAuto()
+        self.pointlightNP.setDepthOffset(1)
+        
 
-        render.setLight(spotlightNP)
+        render.setLight(self.spotlightNP1)
+        render.setLight(self.spotlightNP2)
+        render.setLight(self.pointlightNP)
         
         
