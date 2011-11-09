@@ -32,6 +32,8 @@ class MyPlane(DirectObject):
         self.name = name
         self.np = None
         self.camera = camera
+        self.canFireLeft = True
+        self.canFireRight = True
         
         #init physics
         self.plane = render.attachNewNode(ActorNode(name))

@@ -9,7 +9,12 @@ from direct.interval.IntervalGlobal import *
 class Environment(DirectObject):
     def __init__(self):
         #load the models and set up the corresponding collision bodies
-        self.dome = loader.loadModel("models/total_environment")
-        self.dome.reparentTo(render)
-        #self.colDome = loader.loadModel("models/env_collision")
+        self.model = loader.loadModel("models/simple_env")
+        self.model.reparentTo(render)
+        self.model.setPos(0,0,0)
+        self.dome =render.attachNewNode(ActorNode('dummy env'))
+        self.model.reparentTo(self.dome)
+        self.envNode = self.model.find("**/coll_ground")
+        self.envNode.reparentTo(self.dome)
+        self.envNode.node().setFromCollideMask(BitMask32.allOff())
         
