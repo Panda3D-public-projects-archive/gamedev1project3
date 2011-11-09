@@ -226,26 +226,20 @@ class MyPlane(DirectObject):
         
         return Task.cont
         
-    def setupLights(self):
-        #self.bodyfront_cNode = CollisionNode("bodyfront_"+name)
-        #self.bodyfront_cSphere = CollisionSphere((0,-29,22),8)
-        #self.bodyfront_cNode.addSolid(self.bodyfront_cSphere)
-        #self.bodyfront_cNodePath = self.plane.attachNewNode(self.bodyfront_cNode)
-        
-        
+    def setupLights(self):        
         self.spotlight1 = Spotlight('spotlight1') 
         self.spotlight1.setColor((.6,.6,.6,1)) 
         self.spotlight1.setLens(PerspectiveLens()) 
-        self.spotlight1.getLens().setFov(15,15) 
-        self.spotlight1.getLens().setNearFar(20,20) 
-        self.spotlight1.setExponent(45)
+        self.spotlight1.getLens().setFov(11,11) 
+        self.spotlight1.getLens().setNearFar(2,2) 
+        self.spotlight1.setExponent(5)
         
         self.spotlight2 = Spotlight('spotlight2') 
         self.spotlight2.setColor((.6,.6,.6,1)) 
         self.spotlight2.setLens(PerspectiveLens()) 
-        self.spotlight2.getLens().setFov(15,15) 
-        self.spotlight2.getLens().setNearFar(20,20) 
-        self.spotlight2.setExponent(45)
+        self.spotlight2.getLens().setFov(11,11) 
+        self.spotlight2.getLens().setNearFar(2,2) 
+        self.spotlight2.setExponent(5)
         
         self.pointlight = PointLight('pointlight')
         self.pointlight.setColor((.15,.15,.15,1))
