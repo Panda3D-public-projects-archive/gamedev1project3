@@ -214,7 +214,7 @@ class MyPlane(DirectObject):
         thrust.normalize()
         thrust *= (self.throttle * fullThrottleForce)
         self.velocity += thrust * elapsed
-        self.velocity += gravityForce * elapsed
+       # self.velocity += gravityForce * elapsed
         
         #air drag
         self.velocity *= (1 - baseDrag)
