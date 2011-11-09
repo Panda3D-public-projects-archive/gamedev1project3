@@ -95,11 +95,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("collide-bullet", self.bulletCollision)
         
         #ui task
-        self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
-        #self.textObject2 = OnscreenText(text = str(self.plane2.throttle),pos=(0,0),scale=1)
-        self.textObject.reparentTo(render2d)
-        #self.textObject2.reparentTo(self.myRender2d)
-        taskMgr.add(self.uiText, "uiTask")
+        # self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
+        # self.textObject2 = OnscreenText(text = str(self.plane2.throttle),pos=(0,0),scale=1)
+        # self.textObject.reparentTo(render2d)
+        # self.textObject2.reparentTo(self.myRender2d)
+        # taskMgr.add(self.uiText, "uiTask")
         
         #bullet list
         self.bullets = deque()
@@ -629,14 +629,14 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.machinegun.play()
         taskMgr.doMethodLater(5, self.clearBullet, 'clear_bullet')
         
-    def uiText(self,task):
-        self.textObject.remove()
-        #self.textObject2.remove()
-        throttle = Decimal(str(self.plane1.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
-        #throttle2 = Decimal(str(self.plane2.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
-        self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
-        #self.textObject2 = OnscreenText(text=str(throttle2),pos = (-.5,.02), scale = .07)
-        return task.cont 
+    # def uiText(self,task):
+        # self.textObject.remove()
+        # self.textObject2.remove()
+        # throttle = Decimal(str(self.plane1.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
+        # throttle2 = Decimal(str(self.plane2.throttle)).quantize(Decimal('.01'),rounding=ROUND_DOWN)
+        # self.textObject = OnscreenText(text=str(throttle), pos = (-.5,.02), scale=.07)
+        # self.textObject2 = OnscreenText(text=str(throttle2),pos = (-.5,.02), scale = .07)
+        # return task.cont 
         
         
     def setupSounds(self):
