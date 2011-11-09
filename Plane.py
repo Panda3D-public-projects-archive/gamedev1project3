@@ -82,9 +82,9 @@ class MyPlane(DirectObject):
         self.model_panda.reparentTo(self.plane)
         
         self.left_gun = self.plane.attachNewNode('left_gun')
-        self.left_gun.setPos(12,5,0)
+        self.left_gun.setPos(12,5,-5)
         self.right_gun = self.plane.attachNewNode('right_gun')
-        self.right_gun.setPos(-12,5,0)
+        self.right_gun.setPos(-12,5,-5)
         self.plane.setScale(.05)
         self.plane.setH(180)
         
