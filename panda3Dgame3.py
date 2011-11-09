@@ -70,7 +70,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         
         
         #projectile/guns stuff
-        self.accept("/",self.shootprep1)
+        self.accept("space",self.shootprep1)
         self.accept("space", self.shootprep2)
         
         #bullet collisions
@@ -80,8 +80,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.textObject = OnscreenText(text=str(self.plane1.throttle), pos = (-.5,.02), scale=.07)
         self.textObject.reparentTo(render2d)
         taskMgr.add(self.uiText, "uiTask")
-        
-        
         
         
     def loadModels(self): #collision detection also here (keep with models for organization's sake)

@@ -10,8 +10,8 @@ from Bullet import *
 density = 5000
 bulletVelocity = -1000
 baseDrag = .05
-fullThrottleForce = 1.5
-gravityForce = 9.81
+fullThrottleForce = 70
+gravityForce = Vec3(0, 0, -9.81)
 
 controlFactors = {
     "throttle":1,
@@ -19,10 +19,6 @@ controlFactors = {
     "yaw":100,
     "roll":100
 }
-
-gravity = NodePath(ForceNode("gravity"))
-gravity.reparentTo(render)
-gravity.node().addForce(LinearVectorForce(Vec3.down(), gravityForce))
 
 #base.enableParticles()
 
@@ -110,7 +106,7 @@ class MyPlane(DirectObject):
         
         #movement
         self.throttle = 1
-        self.velocity = Vec3(0, 10, 0)
+        self.velocity = Vec3(0, 0, 0)
         #self.forces = ForceNode("control_forces")
         #NodePath(self.forces).reparentTo(self.plane)
         
@@ -217,8 +213,11 @@ class MyPlane(DirectObject):
         thrust = self.plane.getQuat().getForward() * -1
         thrust.normalize()
         thrust *= (self.throttle * fullThrottleForce)
-        self.velocity += thrust
+        self.velocity += thrust * elapsed
         self.velocity *= (1 - baseDrag)
+        
+        #gravity
+        self.velocity += gravityForce * elapsed
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
