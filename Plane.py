@@ -9,8 +9,8 @@ from Bullet import *
 #GLOBALS
 density = 5000
 bulletVelocity = -1000
-baseDrag = .1
-fullThrottleForce = 1
+baseDrag = .05
+fullThrottleForce = 1.5
 gravityForce = 9.81
 
 controlFactors = {
@@ -211,7 +211,13 @@ class MyPlane(DirectObject):
         if self.throttle < 0:
             self.throttle = 0
         
-        #thrust = self.plane.get
+        #acceleration & drag
+        thrust = self.plane.getQuat().getForward() * -1
+        thrust.normalize()
+        thrust *= (self.throttle * fullThrottleForce)
+        self.velocity += thrust
+        self.velocity *= (1 - baseDrag)
+        
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
         self.plane.setPos(self.velocity * elapsed + self.plane.getPos())
