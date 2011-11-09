@@ -230,6 +230,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.model_lwo.remove() #remove model
                     self.plane1.has_lwo= False 
+                    render.clearLight(self.plane1.spotlightNP2)
                     
             #plane2 left outer wing
             elif str(cEntry.getIntoNodePath()) =="render/plane2/lwouter_plane2":
@@ -240,6 +241,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane2.model_lwo.remove() #remove model
                     self.plane2.has_lwo = False
+                    render.clearLight(self.plane2.spotlightNP2)
                       
             #plane1 right outer wing
             elif str(cEntry.getIntoNodePath()) =="render/plane1/rwouter_plane1":
@@ -250,6 +252,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane1.model_rwo.remove() #remove model
                     self.plane1.has_rwo = False
+                    render.clearLight(self.plane1.spotlightNP1)
                     
             #plane2 right outer wing
             elif str(cEntry.getIntoNodePath()) == "render/plane2/rwouter_plane2":
@@ -260,6 +263,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
                     cEntry.getIntoNodePath().remove() #remove cnode
                     self.plane2.model_rwo.remove() #remove model
                     self.plane2.has_rwo=False
+                    render.clearLight(self.plane2.spotlightNP1)
                     
             #plane1 left inner wing
             elif str(cEntry.getIntoNodePath()) == "render/plane1/lwinner_plane1":
