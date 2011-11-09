@@ -20,9 +20,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #turn off mouse control, otherwise camera is not repositionable
         base.disableMouse()
         
-        
-        
-        
         #set up for split screen
         #first window (default window)
         wp = WindowProperties()
@@ -46,23 +43,11 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.accept("escape", sys.exit)
         
         self.plane1.mapKeys("r", "f", "throttle")
-        self.plane1.mapKeys("s", "w", "pitch")
+        self.plane1.mapKeys("w", "s", "pitch")
         self.plane1.mapKeys("a", "d", "yaw")
         self.plane1.mapKeys("q", "e", "roll")
-        '''
-        self.accept("arrow_up", self.plane1.setKey, ["forward", 1])
-        self.accept("arrow_right", self.plane1.setKey, ["right", 1])
-        self.accept("arrow_left", self.plane1.setKey, ["left", 1])
-        self.accept("arrow_up-up", self.plane1.setKey, ["forward", 0])
-        self.accept("arrow_right-up", self.plane1.setKey, ["right", 0])
-        self.accept("arrow_left-up", self.plane1.setKey, ["left", 0])
-        self.accept("w", self.plane2.setKey, ["forward", 1])
-        self.accept("d", self.plane2.setKey, ["right", 1])
-        self.accept("a", self.plane2.setKey, ["left", 1])
-        self.accept("w-up", self.plane2.setKey, ["forward", 0])
-        self.accept("d-up", self.plane2.setKey, ["right", 0])
-        self.accept("a-up", self.plane2.setKey, ["left", 0])
-        '''
+        
+        
         
         #collision stuff
         self.accept("collide-tail_plane1", self.planeCollisions)
