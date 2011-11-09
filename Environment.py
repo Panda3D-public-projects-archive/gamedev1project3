@@ -17,13 +17,13 @@ class Environment(DirectObject):
         self.envNode = self.model.find("**/coll_ground")
         self.envNode.reparentTo(self.env)
         self.envNode.node().setFromCollideMask(BitMask32.allOff())
-        self.env.setScale(10)
+        self.env.setScale(5)
         
         #bounding dome
         self.dome_model = loader.loadModel("models/dome_again")
-        self.dome_model.setScale(10)
+        self.dome_model.setScale(5)
         self.domeNode = CollisionNode("dome")
-        self.dome = CollisionInvSphere(0,0,0,200)
+        self.dome = CollisionInvSphere(0,0,0,100)
         self.domeNode.addSolid(self.dome)
         self.domeNodePath = self.env.attachNewNode(self.domeNode)
         self.domeNodePath.node().setFromCollideMask(BitMask32.allOff())
