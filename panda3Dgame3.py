@@ -97,21 +97,20 @@ class World(DirectObject): #subclassing here is necessary to accept events
         # self.env = loader.loadModel("models/environment")
         # self.env.reparentTo(render)
         # self.env.setScale(.25)
-        # self.env.setPos(-8, 42, 0)  
+        # self.env.setPos(-8, 42, 0)
         self.env = Environment()
-        #envNode = self.env.colDome.find("**/environment")
-        # envNode = self.env.colDome
-        # base.cTrav.addCollider(envNode,self.cHandler)
-        # self.cHandler.addCollider(envNode,self.env.dome)
+        #base.cTrav.addCollider(self.env.envNode,self.cHandler)
+        #self.cHandler.addCollider(self.env.envNode,self.env.dome)
         #for x in range(self.env.colDome.getNumChildren()):
             #for y in range(self.env.colDome.getChild(x).getNumNodes()):
                 #print self.env.colDome.getChild(x).getNode(y)
         
         #player 1 plane
         self.plane1 = MyPlane(base.camList[0],"plane1")
-        self.plane1.plane.setPos(5,0,5)
+        self.plane1.plane.setPos(0,0,0)
         #add pieces for collisions
         #tail
+        print(self.plane1.tail_cNodePath)
         base.cTrav.addCollider(self.plane1.tail_cNodePath, self.cHandler)
         self.cHandler.addCollider(self.plane1.tail_cNodePath, self.plane1.plane)
         #outer wing left
@@ -468,6 +467,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
             print("plane1 left inner wing hp = " + str(self.plane1.lwi_hp))
             if(self.plane1.lwi_hp<=0):
                 print("plane1 lost lwi!")
+                self.plane1.canFireLeft = False
                 cEntry.getFromNodePath().remove() #remove cnode
                 self.plane1.model_lwi.remove() #remove model
                 self.plane1.has_lwi=False
@@ -486,6 +486,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
             print("plane2 left inner wing hp = " + str(self.plane1.lwi_hp))
             if(self.plane2.lwi_hp<=0):
                 print("plane2 lost lwi!")
+                self.plane2.canFireLeft=False
                 cEntry.getFromNodePath().remove() #remove cnode
                 self.plane2.model_lwi.remove() #remove model
                 self.plane2.has_lwi=False
@@ -504,6 +505,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
             print("plane1 right inner wing hp = " + str(self.plane1.rwi_hp))
             if(self.plane1.rwi_hp<=0):
                 print("plane1 lost rwi!")
+                self.plane1.canFireRight=False
                 cEntry.getFromNodePath().remove() #remove cnode
                 self.plane1.model_rwi.remove() #remove model
                 self.plane1.has_rwi=False
@@ -522,6 +524,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
             print("plane2 right inner wing hp = " + str(self.plane2.rwi_hp))
             if(self.plane2.rwi_hp<=0):
                 print("plane2 lost rwi!")
+                self.plane2.canFireRight=False
                 cEntry.getFromNodePath().remove() #remove cnode
                 self.plane2.model_rwi.remove() #remove model
                 self.plane2.has_rwi=False
@@ -539,24 +542,26 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel doesnt work but will hold for filler right now
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
-        vel= Vec3(0,10,0)
-        pos = Point3(self.plane1.plane.getX(), self.plane1.plane.getY(), self.plane1.plane.getZ()+5)
-        bullet = Bullet()
-        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
-        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-        bullet.fire(vel,pos)
+        if self.plane1.canFireRight or self.plane1.canFireLeft:
+            vel= Vec3(0,10,0)
+            pos = Point3(self.plane1.plane.getX(), self.plane1.plane.getY(), self.plane1.plane.getZ()+5)
+            bullet = Bullet()
+            base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+            self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+            bullet.fire(vel,pos)
         self.machinegun.play()
     
     def shootprep2(self):
         #vel doesnt work but will hold for filler right now
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
-        vel= Vec3(0,10,0)
-        pos = Point3(self.plane2.plane.getX(), self.plane2.plane.getY(), self.plane2.plane.getZ()+5)
-        bullet = Bullet()
-        base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
-        self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
-        bullet.fire(vel,pos)
+        if self.plane2.canFireRight or self.plane2.canFireLeft:
+            vel= Vec3(0,10,0)
+            pos = Point3(self.plane2.plane.getX(), self.plane2.plane.getY(), self.plane2.plane.getZ()+5)
+            bullet = Bullet()
+            base.cTrav.addCollider(bullet.cNodePath, self.cHandler)
+            self.cHandler.addCollider(bullet.cNodePath, bullet.bullet)
+            bullet.fire(vel,pos)
         self.machinegun.play()
         
     def uiText(self,task):
