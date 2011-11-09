@@ -541,7 +541,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #vel = self.plane.node().getPhysicsObject().getVelocity()
         #vel+= vel.normalize() * bulletVelocity
         for i in self.bullets:
-            if i.bullet.getZ() <-9:
+            if i.bullet.getZ()==-10:
                 i.bullet.remove()
                 self.bullets.remove(i)
                 #print("bullet removed")
