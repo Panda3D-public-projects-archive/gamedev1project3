@@ -9,8 +9,8 @@ from Bullet import *
 #GLOBALS
 density = 5000
 bulletVelocity = -1000
-baseDrag = .05
-fullThrottleForce = 70
+baseDrag = .01
+fullThrottleForce = 50
 gravityForce = Vec3(0, 0, -9.81)
 
 controlFactors = {
@@ -105,7 +105,7 @@ class MyPlane(DirectObject):
         }
         
         #movement
-        self.throttle = 1
+        self.throttle = 0
         self.velocity = Vec3(0, 0, 0)
         #self.forces = ForceNode("control_forces")
         #NodePath(self.forces).reparentTo(self.plane)
@@ -209,18 +209,19 @@ class MyPlane(DirectObject):
         if self.throttle < 0:
             self.throttle = 0
         
-        #acceleration & drag
+        #acceleration & gravity
         thrust = self.plane.getQuat().getForward() * -1
         thrust.normalize()
         thrust *= (self.throttle * fullThrottleForce)
         self.velocity += thrust * elapsed
-        self.velocity *= (1 - baseDrag)
-        
-        #gravity
         self.velocity += gravityForce * elapsed
+        
+        #air drag
+        self.velocity *= (1 - baseDrag)
         
         #Forward Movement
         #self.throttleForce.setAmplitude(self.throttle * fullThrottleForce)
+        self.velocity *= (1 - baseDrag)
         self.plane.setPos(self.velocity * elapsed + self.plane.getPos())
         
         #angle movement

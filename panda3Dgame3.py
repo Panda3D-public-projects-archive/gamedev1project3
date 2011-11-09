@@ -48,8 +48,6 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.plane1.mapKeys("a", "d", "yaw")
         self.plane1.mapKeys("q", "e", "roll")
         
-        
-        
         #collision stuff
         self.accept("collide-tail_plane1", self.planeCollisions)
         self.accept("collide-bodyfront_plane1", self.planeCollisions)
