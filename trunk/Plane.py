@@ -15,25 +15,9 @@ def maxVelocity():
     #return (1-baseDrag) * fullThrottleForce / baseDrag
     return 100
 
-gravityForce = Vec3(0, 0, -30)
+gravityForce = Vec3(0, 0, -0)
 
-liftPower = (1, -1) #lift and angle
-
-#rate of change, per second, of the various controls
-controlFactors = {
-    "throttle":1, #scales from 0 to 1
-    
-    #these scale from -Limit to Limit (see controlLimits, below)
-    "pitch":200,
-    "yaw":100,
-    "roll":200
-}
-
-controlLimits = {
-    "pitch":70,
-    "yaw":30,
-    "roll":50
-}
+liftPower = (1, -1) #delta-lift and delta-pitch
 
 class MyPlane(DirectObject):
     def __init__(self,camera,name):
@@ -117,10 +101,28 @@ class MyPlane(DirectObject):
         #controls
         self.resetControls()
         
+        #rate of change, per second, of the various controls
+        self.controlFactors = {
+            "throttle":1, #scales from 0 to 1
+            
+            #these scale from -Limit to Limit (see controlLimits, below)
+            "pitch":200,
+            "yaw":100,
+            "roll":200
+        }
+        
+        self.controlLimits = {
+            "pitch":70,
+            "yaw":30,
+            "roll":50
+        }
+        
         #movement
         self.throttle = .5
         self.velocity = Vec3(0, 0, 0)
         self.rotation = Vec3(0, 0, 0) #the current rotational velocity
+        
+        self.outOfControl = Vec3(0, 0, 0)
         
         #misc
         self.setupCollision()
@@ -192,7 +194,7 @@ class MyPlane(DirectObject):
         self.accept("backspace", self.resetControls)
         
     def runControl(self, control, direction):
-        self.controls[control] += (1 if direction == "up" else -1) * controlFactors[control]
+        self.controls[control] += (1 if direction == "up" else -1) * self.controlFactors[control]
         #print " ".join((control, direction))
         #print self.controls
         
@@ -217,17 +219,17 @@ class MyPlane(DirectObject):
             
         for (i, axis) in enumerate(["yaw", "pitch", "roll"]):
             self.rotation.addToCell(i, self.controls[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
-            if self.rotation.getCell(i) > controlLimits[axis]:
-                self.rotation.setCell(i, controlLimits[axis])
-            elif self.rotation.getCell(i) < -controlLimits[axis]:
-                self.rotation.setCell(i, -controlLimits[axis])
+            if self.rotation.getCell(i) > self.controlLimits[axis]:
+                self.rotation.setCell(i, self.controlLimits[axis])
+            elif self.rotation.getCell(i) < -self.controlLimits[axis]:
+                self.rotation.setCell(i, -self.controlLimits[axis])
                 
             elif self.controls[axis] == 0 and self.rotation.getCell(i) > 0:
-                self.rotation.addToCell(i, -controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
+                self.rotation.addToCell(i, -self.controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
                 if self.rotation.getCell(i) < 0:
                     self.rotation.setCell(i, 0)
             elif self.controls[axis] == 0 and self.rotation.getCell(i) < 0:
-                self.rotation.addToCell(i, controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
+                self.rotation.addToCell(i, self.controlFactors[axis] * elapsed * max(self.velocity.length()/maxVelocity(), 1))
                 if self.rotation.getCell(i) > 0:
                     self.rotation.setCell(i, 0)
                 
