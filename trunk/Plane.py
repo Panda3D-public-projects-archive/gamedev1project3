@@ -132,8 +132,7 @@ class MyPlane(DirectObject):
         self.camera.setH(180)
         self.camera.setP(-10)
         
-        #bullet list
-        self.bullets = []
+        
        
         
     def setupCollision(self):

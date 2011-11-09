@@ -29,5 +29,5 @@ class Bullet(DirectObject):
     ############################################################
         print(" SHOOT")
         self.bullet.setHpr(hpr)
-        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, duration = 2)
+        self.trajectory = ProjectileInterval(self.bullet,startPos=pos,startVel=velocity, endZ = -10)
         self.trajectory.start()
